@@ -1,4 +1,3 @@
-
 import { Service, Project, Testimonial, NavItem, SectionId, TechDomain, ProcessStep } from './types';
 
 export const COMPANY_NAME = "OITS Dhaka";
@@ -88,7 +87,7 @@ export const PROJECTS: Project[] = [
     id: '1',
     title: 'FinTech Analytics Hub',
     category: 'Enterprise Software',
-    imageUrl: 'https://images.unsplash.com/photo-1551288049-bbbda5366fd9?auto=format&fit=crop&q=80&w=1000',
+    imageUrl: 'https://images.unsplash.com/photo-1551288049-bbbda5366fd9?auto=format&fit=crop&q=80&w=800&fm=webp',
     description: 'A comprehensive financial analytics dashboard for real-time market tracking.',
     technologies: ['React', 'D3.js', 'Node.js', 'PostgreSQL'],
     demoVideoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
@@ -97,7 +96,7 @@ export const PROJECTS: Project[] = [
     id: '2',
     title: 'Luma Healthcare App',
     category: 'Mobile Application',
-    imageUrl: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1000',
+    imageUrl: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800&fm=webp',
     description: 'A HIPAA-compliant telemedicine platform with secure video conferencing.',
     technologies: ['Flutter', 'Firebase', 'WebRTC'],
     demoVideoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
@@ -106,7 +105,7 @@ export const PROJECTS: Project[] = [
     id: '3',
     title: 'Global Logistics Engine',
     category: 'Supply Chain',
-    imageUrl: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=1000',
+    imageUrl: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=800&fm=webp',
     description: 'AI-driven logistics platform managing complex global supply chains.',
     technologies: ['Next.js', 'Python', 'AWS SageMaker'],
     demoVideoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',

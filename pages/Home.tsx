@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Hero } from '../components/Hero';
 import { Marquee } from '../components/Marquee';
@@ -44,7 +43,10 @@ const Home: React.FC = () => {
         <div className="container mx-auto px-6 text-center relative z-10">
           <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-10 leading-tight">Ready to build your <br/> digital future?</h2>
           <Link to="/contact">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 scale-110 shadow-2xl">Get Started Today</Button>
+            {/* Fix: Using variant="secondary" ensuring dark text on light button background for visibility */}
+            <Button variant="secondary" size="lg" className="scale-110 shadow-2xl !bg-white !text-blue-600 hover:!bg-blue-50">
+              Get Started Today
+            </Button>
           </Link>
         </div>
       </section>

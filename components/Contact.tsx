@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Mail, Phone, Send, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { Button } from './ui/Button';
@@ -63,7 +62,7 @@ export const Contact: React.FC = () => {
 
   const getInputClass = (field: keyof typeof formData) => {
     const hasError = !!errors[field];
-    return `w-full bg-slate-50 dark:bg-slate-900/40 border ${hasError ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/20' : 'border-slate-200 dark:border-slate-700/50 focus:border-blue-500 focus:ring-blue-500/30'} rounded-xl px-4 py-4 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:ring-1 transition-all duration-300 font-medium`;
+    return `w-full bg-slate-50 dark:bg-slate-900/40 border ${hasError ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/20' : 'border-slate-200 dark:border-slate-700/50 focus:border-blue-500 focus:ring-blue-500/30'} rounded-xl px-4 py-4 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 transition-all duration-300 font-medium`;
   };
 
   return (
@@ -94,7 +93,7 @@ export const Contact: React.FC = () => {
                   </div>
                   <div>
                     <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">{item.label}</p>
-                    <p className="text-lg font-bold text-slate-900 dark:text-white">{item.value}</p>
+                    <p className="text-lg font-bold text-slate-900 dark:text-slate-100">{item.value}</p>
                   </div>
                 </div>
               ))}
@@ -213,4 +212,3 @@ export const Contact: React.FC = () => {
     </section>
   );
 };
-import { Link } from 'react-router-dom';

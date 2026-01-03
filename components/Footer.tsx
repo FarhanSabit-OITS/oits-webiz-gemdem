@@ -28,10 +28,14 @@ const SocialLink = ({ href, icon: Icon, label }: { href: string; icon: any; labe
 
 export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    // If it's an anchor on the same page, scroll to it.
+    if (href.startsWith('#')) {
+      e.preventDefault();
+      const id = href.substring(1);
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 

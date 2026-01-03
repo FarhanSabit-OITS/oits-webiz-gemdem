@@ -1,8 +1,8 @@
-
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { ArrowDown, X, ExternalLink, Calendar, Code2, ArrowUpRight, Play, Film, Tag, Volume2, VolumeX, Pause, Subtitles, MonitorPlay, Search as SearchIcon, RotateCcw } from 'lucide-react';
+// Added missing icons: Play, Pause, Volume2, VolumeX
+import { X, Tag, MonitorPlay, RotateCcw, Check, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import { PROJECTS } from '../constants';
-import { SectionId, Project } from '../types';
+import { Project } from '../types';
 import { Button } from './ui/Button';
 
 // --- Types & Constants ---
@@ -44,9 +44,8 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
   const [isPlaying, setIsPlaying] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
-  const [captionsEnabled, setCaptionsEnabled] = useState(false);
+  const [captionsEnabled] = useState(false);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const controlsTimeoutRef = useRef<number | null>(null);
@@ -108,15 +107,6 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
     if (videoRef.current) {
       videoRef.current.muted = !isMuted;
       setIsMuted(!isMuted);
-    }
-  };
-
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVol = parseFloat(e.target.value);
-    setVolume(newVol);
-    if (videoRef.current) {
-      videoRef.current.volume = newVol;
-      setIsMuted(newVol === 0);
     }
   };
 
@@ -182,7 +172,7 @@ interface ProjectModalProps {
   onProjectSelect: (project: Project) => void;
 }
 
-const ProjectModal: React.FC<ProjectModalProps> = ({ project, autoPlay = false, onClose, onProjectSelect }) => {
+const ProjectModal: React.FC<ProjectModalProps> = ({ project, autoPlay = false, onClose }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeProject, setActiveProject] = useState<Project | null>(project);
   const [isClosing, setIsClosing] = useState(false);
@@ -235,7 +225,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, autoPlay = false, 
               <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-8">{activeProject.fullDescription || activeProject.description}</p>
               <div className="flex flex-wrap gap-2">
                 {activeProject.technologies?.map(tech => (
-                  <span key={tech} className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded text-sm">{tech}</span>
+                  <span key={tech} className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded text-sm text-slate-700 dark:text-slate-200 font-medium">{tech}</span>
                 ))}
               </div>
             </div>
@@ -247,7 +237,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, autoPlay = false, 
 };
 
 // --- Card Component ---
-const ProjectCard = ({ project, index, onClick, onViewDemo, highlightedTags }: any) => {
+const ProjectCard = ({ project, onClick, onViewDemo, highlightedTags }: any) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   
   return (
@@ -283,7 +273,16 @@ const ProjectCard = ({ project, index, onClick, onViewDemo, highlightedTags }: a
         <p className="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 mb-4">{project.description}</p>
         <div className="flex flex-wrap gap-1.5">
           {project.technologies?.map((tech: string) => (
-            <span key={tech} className={`text-[10px] px-2 py-0.5 rounded-full border transition-all duration-300 ${highlightedTags.includes(tech) ? 'bg-blue-600 border-blue-600 text-white font-bold scale-105 shadow-sm' : 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500'}`}>{tech}</span>
+            <span 
+              key={tech} 
+              className={`text-[10px] px-2 py-0.5 rounded-full border transition-all duration-300 font-bold ${
+                highlightedTags.includes(tech) 
+                  ? 'bg-blue-600 border-blue-600 text-white scale-110 shadow-md ring-2 ring-blue-500/20' 
+                  : 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500'
+              }`}
+            >
+              {tech}
+            </span>
           ))}
         </div>
       </div>
@@ -293,14 +292,12 @@ const ProjectCard = ({ project, index, onClick, onViewDemo, highlightedTags }: a
 
 // --- Portfolio ---
 export const Portfolio: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState(ALL_CATEGORY);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  // Fix: Define missing state for selected project modal
   const [selectedProjectState, setSelectedProjectState] = useState<{ project: Project; autoPlay: boolean } | null>(null);
 
   useEffect(() => {
-    // Simulate initial data fetch
     const timer = setTimeout(() => setLoading(false), 1200);
     return () => clearTimeout(timer);
   }, []);
@@ -314,13 +311,28 @@ export const Portfolio: React.FC = () => {
   }, []);
 
   const filteredProjects = useMemo(() => PROJECTS.filter(p => {
-    const matchCat = activeCategory === ALL_CATEGORY || p.category === activeCategory;
+    const matchCat = selectedCategories.length === 0 || selectedCategories.includes(p.category);
     const matchTags = selectedTags.length === 0 || (p.technologies && selectedTags.some(tag => p.technologies?.includes(tag)));
     return matchCat && matchTags;
-  }), [activeCategory, selectedTags]);
+  }), [selectedCategories, selectedTags]);
+
+  const toggleCategory = (cat: string) => {
+    if (cat === ALL_CATEGORY) {
+      setSelectedCategories([]);
+      return;
+    }
+    setSelectedCategories(prev => 
+      prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+    );
+  };
 
   const toggleTag = (tag: string) => {
     setSelectedTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
+  };
+
+  const clearFilters = () => {
+    setSelectedCategories([]);
+    setSelectedTags([]);
   };
 
   return (
@@ -328,15 +340,21 @@ export const Portfolio: React.FC = () => {
       <div className="container mx-auto px-6">
         <div className="mb-12 flex flex-col lg:flex-row gap-8">
            <div className="w-full lg:w-64 space-y-4">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Categories</h4>
-              <div className="flex lg:flex-col gap-2 overflow-x-auto no-scrollbar pb-2 lg:pb-0">
+              <h4 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Categories</h4>
+              <div className="flex lg:flex-col gap-2 overflow-x-auto no-scrollbar pb-2 lg:pb-0" role="group" aria-label="Project category filter">
                 {categories.map(cat => (
                   <button 
                     key={cat} 
-                    onClick={() => setActiveCategory(cat)} 
-                    className={`px-4 py-2 rounded-xl text-sm font-semibold text-left whitespace-nowrap transition-all duration-300 ${activeCategory === cat ? 'bg-slate-900 text-white shadow-lg' : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                    onClick={() => toggleCategory(cat)} 
+                    aria-pressed={cat === ALL_CATEGORY ? selectedCategories.length === 0 : selectedCategories.includes(cat)}
+                    className={`px-4 py-2 rounded-xl text-sm font-semibold text-left whitespace-nowrap transition-all duration-300 relative group flex items-center justify-between ${
+                      (cat === ALL_CATEGORY ? selectedCategories.length === 0 : selectedCategories.includes(cat))
+                        ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-lg' 
+                        : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    }`}
                   >
                     {cat}
+                    {(cat !== ALL_CATEGORY && selectedCategories.includes(cat)) && <Check size={14} className="ml-2" />}
                   </button>
                 ))}
               </div>
@@ -345,21 +363,31 @@ export const Portfolio: React.FC = () => {
               <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 mb-8 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
-                    <Tag size={18} className="text-blue-600" />
-                    <span className="font-bold text-slate-900 dark:text-white">Filter by Stack</span>
+                    <Tag size={18} className="text-blue-600 dark:text-blue-400" />
+                    <span className="font-bold text-slate-900 dark:text-white">Filter by Technology Stack</span>
                   </div>
-                  {selectedTags.length > 0 && (
-                    <button onClick={() => setSelectedTags([])} className="text-xs text-blue-600 hover:underline flex items-center gap-1">
-                      <RotateCcw size={12} /> Clear all
+                  {(selectedTags.length > 0 || selectedCategories.length > 0) && (
+                    <button 
+                      onClick={clearFilters} 
+                      className="text-xs text-blue-600 dark:text-blue-400 font-bold hover:underline flex items-center gap-1 transition-all"
+                      aria-label="Clear all filters"
+                    >
+                      <RotateCcw size={12} /> Reset all filters
                     </button>
                   )}
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2" role="group" aria-label="Technology tag filters">
                   {allTags.map(tag => (
                     <button 
                       key={tag} 
                       onClick={() => toggleTag(tag)} 
-                      className={`px-3 py-1 rounded-full text-xs font-bold border transition-all duration-300 active:scale-90 ${selectedTags.includes(tag) ? 'bg-blue-600 border-blue-600 text-white shadow-md scale-105' : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-blue-400'}`}
+                      aria-pressed={selectedTags.includes(tag)}
+                      aria-label={`Filter by ${tag}`}
+                      className={`px-3 py-1 rounded-full text-xs font-bold border transition-all duration-300 active:scale-95 ${
+                        selectedTags.includes(tag) 
+                          ? 'bg-blue-600 border-blue-600 text-white shadow-md scale-105' 
+                          : 'bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-blue-400 dark:hover:border-blue-500'
+                      }`}
                     >
                       {tag}
                     </button>
@@ -371,10 +399,9 @@ export const Portfolio: React.FC = () => {
                 {loading ? (
                   Array.from({ length: 6 }).map((_, i) => <ProjectSkeleton key={i} />)
                 ) : filteredProjects.length > 0 ? (
-                  filteredProjects.map((project, index) => (
+                  filteredProjects.map((project) => (
                     <ProjectCard 
                       key={project.id} 
-                      index={index} 
                       project={project} 
                       highlightedTags={selectedTags} 
                       onClick={() => setSelectedProjectState({ project, autoPlay: false })} 
@@ -382,9 +409,12 @@ export const Portfolio: React.FC = () => {
                     />
                   ))
                 ) : (
-                  <div className="col-span-full flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-900 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800">
-                    <p className="text-slate-500 mb-4 font-medium">No projects found matching these filters.</p>
-                    <Button variant="outline" size="sm" onClick={() => { setActiveCategory(ALL_CATEGORY); setSelectedTags([]); }}>Reset Filters</Button>
+                  <div className="col-span-full flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-900 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800">
+                    <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400 mb-6">
+                      <X size={32} />
+                    </div>
+                    <p className="text-slate-500 dark:text-slate-400 mb-6 font-medium text-lg">No projects match the selected criteria.</p>
+                    <Button variant="outline" size="sm" onClick={clearFilters} className="rounded-full">Reset All Filters</Button>
                   </div>
                 )}
               </div>

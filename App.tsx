@@ -1,9 +1,9 @@
-
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { AiAssistant } from './components/AiAssistant';
+import { CookieConsent } from './components/CookieConsent';
 import { COMPANY_NAME, TAGLINE } from './constants';
 
 // Lazy load pages for performance
@@ -17,7 +17,7 @@ const ContactPage = lazy(() => import('./pages/ContactPage'));
 const ScrollToTop = () => {
   const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [pathname]);
   return null;
 };
@@ -68,6 +68,7 @@ function AppContent() {
       </main>
       <Footer theme={theme} toggleTheme={toggleTheme} />
       <AiAssistant />
+      <CookieConsent />
     </div>
   );
 }
