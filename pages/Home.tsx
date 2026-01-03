@@ -16,9 +16,9 @@ const Home: React.FC = () => {
       <Marquee />
       
       <div className="relative">
-        <Services />
+        <Services limit={4} />
         <FeaturedIn />
-        <div className="container mx-auto px-6 py-24 text-center">
+        <div className="container mx-auto px-6 py-12 text-center">
           <Link to="/services">
             <Button variant="outline" size="lg" className="rounded-full">Explore All Services</Button>
           </Link>
@@ -27,11 +27,15 @@ const Home: React.FC = () => {
 
       <Process />
 
-      <div className="bg-slate-50 dark:bg-slate-950/50">
-        <Portfolio />
+      <div className="bg-slate-50 dark:bg-slate-950/50 pt-24">
+        <div className="container mx-auto px-6 text-center mb-12">
+           <h2 className="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Featured Work</h2>
+           <h3 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white">Selected Case Studies</h3>
+        </div>
+        <Portfolio limit={3} />
         <div className="container mx-auto px-6 pb-24 text-center">
           <Link to="/portfolio">
-            <Button variant="outline" size="lg" className="rounded-full">View Full Case Studies</Button>
+            <Button variant="outline" size="lg" className="rounded-full">View All Projects</Button>
           </Link>
         </div>
       </div>
@@ -43,7 +47,6 @@ const Home: React.FC = () => {
         <div className="container mx-auto px-6 text-center relative z-10">
           <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-10 leading-tight">Ready to build your <br/> digital future?</h2>
           <Link to="/contact">
-            {/* Fix: Using variant="secondary" ensuring dark text on light button background for visibility */}
             <Button variant="secondary" size="lg" className="scale-110 shadow-2xl !bg-white !text-blue-600 hover:!bg-blue-50">
               Get Started Today
             </Button>

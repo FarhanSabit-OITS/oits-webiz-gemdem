@@ -66,13 +66,13 @@ export const Contact: React.FC = () => {
   const getLabelClass = (field: keyof typeof formData) => {
     const isActive = focusedField === field || formData[field].length > 0;
     return `absolute left-4 transition-all duration-300 pointer-events-none font-bold uppercase tracking-widest text-[10px] 
-      ${isActive ? '-top-2.5 bg-white dark:bg-slate-900 px-2 text-blue-600 dark:text-blue-400 opacity-100 z-10' : 'top-4 text-slate-500 opacity-0 translate-y-1'}`;
+      ${isActive ? '-top-2.5 bg-white dark:bg-slate-900 px-2 text-blue-600 dark:text-blue-400 opacity-100 z-10' : 'top-5 text-slate-500 opacity-60 translate-y-0'}`;
   };
 
   const getInputClass = (field: keyof typeof formData) => {
     const hasError = !!errors[field];
     const isFocused = focusedField === field;
-    return `w-full bg-slate-50 dark:bg-slate-900/40 border transition-all duration-300 rounded-xl px-4 py-4 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none ring-offset-2 dark:ring-offset-slate-900
+    return `w-full bg-slate-50 dark:bg-slate-900/40 border transition-all duration-300 rounded-xl px-4 py-4 text-slate-900 dark:text-slate-100 placeholder-transparent focus:outline-none ring-offset-2 dark:ring-offset-slate-900
       ${hasError ? 'border-red-500 ring-red-500/10 animate-shake' : isFocused ? 'border-blue-600 ring-4 ring-blue-600/5 shadow-[0_0_15px_rgba(37,99,235,0.1)]' : 'border-slate-200 dark:border-slate-800'}`;
   };
 
@@ -137,7 +137,7 @@ export const Contact: React.FC = () => {
                         aria-labelledby="label-name"
                         aria-invalid={!!errors.name}
                         className={getInputClass('name')}
-                        placeholder={focusedField === 'name' ? '' : 'Full Name'}
+                        placeholder="Full Name"
                         value={formData.name}
                         onFocus={() => setFocusedField('name')}
                         onBlur={() => setFocusedField(null)}
@@ -165,7 +165,7 @@ export const Contact: React.FC = () => {
                         aria-labelledby="label-email"
                         aria-invalid={!!errors.email}
                         className={getInputClass('email')}
-                        placeholder={focusedField === 'email' ? '' : 'Work Email Address'}
+                        placeholder="Work Email Address"
                         value={formData.email}
                         onFocus={() => setFocusedField('email')}
                         onBlur={() => setFocusedField(null)}
@@ -193,7 +193,7 @@ export const Contact: React.FC = () => {
                       aria-invalid={!!errors.message}
                       rows={4}
                       className={`${getInputClass('message')} resize-none`}
-                      placeholder={focusedField === 'message' ? '' : 'Describe your project goal...'}
+                      placeholder="Describe your project goal..."
                       value={formData.message}
                       onFocus={() => setFocusedField('message')}
                       onBlur={() => setFocusedField(null)}
@@ -214,7 +214,7 @@ export const Contact: React.FC = () => {
                    type="submit" 
                    variant="primary" 
                    size="lg" 
-                   className="w-full text-lg shadow-xl shadow-blue-600/20"
+                   className="w-full text-lg shadow-xl shadow-blue-600/20 active:scale-95"
                    disabled={status === 'sending'}
                    aria-label="Submit project consultation form"
                  >
