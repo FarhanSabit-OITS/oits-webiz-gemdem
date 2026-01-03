@@ -1,43 +1,33 @@
 
 import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Terminal, Sun, Moon } from 'lucide-react';
-import { COMPANY_NAME, NAV_ITEMS } from '../constants';
+import { COMPANY_NAME } from '../constants';
 import { Button } from './ui/Button';
-import { SectionId } from '../types';
 
 interface HeaderProps {
   theme: 'light' | 'dark';
   toggleTheme: () => void;
 }
 
+const NAV_LINKS = [
+  { label: 'Home', href: '/' },
+  { label: 'Services', href: '/services' },
+  { label: 'Portfolio', href: '/portfolio' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+];
+
 export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMobileMenuOpen(false);
-    }
-  };
-
-  const scrollToContact = () => {
-    const contactSection = document.getElementById(SectionId.CONTACT);
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth' });
-      setIsMobileMenuOpen(false);
-    }
-  };
 
   return (
     <header 
@@ -48,29 +38,31 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
       }`}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
-        <a 
-          href="#" 
+        <Link 
+          to="/" 
           className="flex items-center gap-2 group" 
-          onClick={(e) => handleNavClick(e, `#${SectionId.HOME}`)}
           aria-label={`${COMPANY_NAME} home`}
         >
           <div className="w-10 h-10 bg-slate-900 dark:bg-white rounded-xl flex items-center justify-center text-white dark:text-slate-900 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
             <Terminal size={20} />
           </div>
           <span className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">{COMPANY_NAME}</span>
-        </a>
+        </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-2" aria-label="Main Navigation">
-          {NAV_ITEMS.map((item) => (
-            <a 
+          {NAV_LINKS.map((item) => (
+            <Link 
               key={item.label} 
-              href={item.href}
-              onClick={(e) => handleNavClick(e, item.href)}
-              className="px-4 py-2 rounded-full text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95"
+              to={item.href}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 active:scale-95 ${
+                location.pathname === item.href 
+                  ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-slate-800' 
+                  : 'text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-slate-800'
+              }`}
             >
               {item.label}
-            </a>
+            </Link>
           ))}
           
           <div className="ml-2 pl-2 border-l border-slate-200 dark:border-slate-700 flex items-center gap-2">
@@ -84,9 +76,11 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
           </div>
 
           <div className="ml-2">
-            <Button variant="primary" size="sm" onClick={scrollToContact} aria-label="Request a demonstration">
-              Request Demo
-            </Button>
+            <Link to="/contact">
+              <Button variant="primary" size="sm" aria-label="Request a demo">
+                Request Demo
+              </Button>
+            </Link>
           </div>
         </nav>
 
@@ -115,19 +109,25 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
       {isMobileMenuOpen && (
         <div className="absolute top-full left-0 right-0 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 md:hidden p-6 shadow-2xl animate-in slide-in-from-top-2 duration-300">
           <nav className="flex flex-col gap-2" aria-label="Mobile Navigation">
-            {NAV_ITEMS.map((item) => (
-              <a 
+            {NAV_LINKS.map((item) => (
+              <Link 
                 key={item.label} 
-                href={item.href}
-                onClick={(e) => handleNavClick(e, item.href)}
-                className="px-4 py-3 rounded-lg text-lg font-medium text-slate-800 dark:text-slate-100 hover:bg-blue-50 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400 transition-all active:scale-95"
+                to={item.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`px-4 py-3 rounded-lg text-lg font-medium transition-all active:scale-95 ${
+                   location.pathname === item.href 
+                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-slate-800' 
+                    : 'text-slate-800 dark:text-slate-100 hover:bg-blue-50 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400'
+                }`}
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
-            <Button className="w-full mt-4" onClick={scrollToContact} aria-label="Request a demonstration">
-              Request Demo
-            </Button>
+            <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>
+              <Button className="w-full mt-4" aria-label="Request a demonstration">
+                Request Demo
+              </Button>
+            </Link>
           </nav>
         </div>
       )}

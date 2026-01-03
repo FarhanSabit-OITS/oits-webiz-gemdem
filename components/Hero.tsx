@@ -1,9 +1,9 @@
 
 import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowRight, Play, Terminal as TerminalIcon } from 'lucide-react';
 import { Button } from './ui/Button';
 import { TAGLINE, COMPANY_NAME } from '../constants';
-import { SectionId } from '../types';
 
 const CODE_SNIPPET = `// OITS Dhaka Project Config
 const project = {
@@ -21,12 +21,9 @@ async function deploy() {
 
 export const Hero: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
   const [typedCode, setTypedCode] = useState("");
   const heroRef = useRef<HTMLElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Typewriter effect
   useEffect(() => {
     let i = 0;
     const interval = setInterval(() => {
@@ -38,36 +35,16 @@ export const Hero: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (heroRef.current) observer.observe(heroRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
-    <section ref={heroRef} id={SectionId.HOME} className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[90vh] flex items-center">
-      {/* Background Parallax Layers */}
+    <section ref={heroRef} id="home" className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[90vh] flex items-center">
       <div className="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
         <div 
             className="absolute inset-0 bg-cover bg-center opacity-10 dark:opacity-20 blur-sm scale-110"
-            style={{ 
-                backgroundImage: 'url("https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2070")',
-                transform: `translateY(${scrollY * 0.2}px)`
-            }}
+            style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2070")' }}
             aria-hidden="true"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-50 dark:from-slate-950 via-slate-50/90 dark:via-slate-950/90 to-slate-50 dark:to-slate-950" />
@@ -82,7 +59,7 @@ export const Hero: React.FC = () => {
               Engineering Excellence
             </div>
             
-            <h1 className={`text-5xl md:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.05] transition-all duration-1000 delay-200 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <h1 className={`text-5xl md:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.05] transition-all duration-1000 delay-200 transform ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
               Turning Code into <br className="hidden md:block"/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500">Business Growth</span>
             </h1>
@@ -92,19 +69,22 @@ export const Hero: React.FC = () => {
             </p>
 
             <div className={`flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start transition-all duration-1000 delay-400 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-              <Button 
-                size="lg" 
-                variant="primary"
-                aria-label="Start a new project with us"
-                className="group transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20"
-                onClick={() => document.getElementById(SectionId.CONTACT)?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                Start a Project
-                <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-              <Button variant="outline" size="lg" className="group" aria-label="Explore our process">
-                View Portfolio
-              </Button>
+              <Link to="/contact">
+                <Button 
+                  size="lg" 
+                  variant="primary"
+                  aria-label="Request a quote and start your journey"
+                  className="group transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20 px-10"
+                >
+                  Request a Quote
+                  <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
+              <Link to="/portfolio">
+                <Button variant="outline" size="lg" className="group" aria-label="Explore our previous projects">
+                  Our Portfolio
+                </Button>
+              </Link>
             </div>
           </div>
 
@@ -134,7 +114,7 @@ export const Hero: React.FC = () => {
               <div className="relative bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden aspect-[4/3]">
                 <img 
                   src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=1200" 
-                  alt="Modern Software Development"
+                  alt="Modern Software Development Workspace"
                   loading="lazy"
                   className="w-full h-full object-cover opacity-90 transition-transform duration-700 hover:scale-105"
                 />

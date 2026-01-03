@@ -10,6 +10,7 @@ export const Contact: React.FC = () => {
   const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
   const [status, setStatus] = useState<'idle' | 'sending' | 'success'>('idle');
   const [isVisible, setIsVisible] = useState(false);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -46,12 +47,23 @@ export const Contact: React.FC = () => {
     if (!validate()) return;
     
     setStatus('sending');
+    // Simulate API call
     setTimeout(() => {
       setStatus('success');
       setFormData({ name: '', email: '', message: '' });
       setErrors({});
-      setTimeout(() => setStatus('idle'), 5000);
     }, 1500);
+  };
+
+  const getLabelClass = (field: keyof typeof formData) => {
+    const isActive = focusedField === field || formData[field].length > 0;
+    return `absolute left-4 transition-all duration-300 pointer-events-none font-bold uppercase tracking-widest text-[10px] 
+      ${isActive ? '-top-2.5 bg-slate-900 px-2 text-blue-400 opacity-100 z-10' : 'top-3.5 text-slate-500 opacity-0 translate-y-1'}`;
+  };
+
+  const getInputClass = (field: keyof typeof formData) => {
+    const hasError = !!errors[field];
+    return `w-full bg-slate-900 border ${hasError ? 'border-red-500' : 'border-slate-700'} rounded-lg px-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400/30 transition-all duration-300`;
   };
 
   return (
@@ -101,78 +113,96 @@ export const Contact: React.FC = () => {
                    <Button variant="outline" onClick={() => setStatus('idle')} className="text-white border-slate-700 hover:bg-slate-700">Send another message</Button>
                 </div>
              ) : (
-               <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                   <div className="group relative">
-                     <label htmlFor="name" className={`block text-xs font-bold uppercase text-blue-400 mb-1 tracking-wide transition-all ${formData.name ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1'}`}>
+               <form onSubmit={handleSubmit} className="space-y-8" noValidate>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                   <div className="relative group">
+                     <label id="label-name" htmlFor="name" className={getLabelClass('name')}>
                         Name
                      </label>
                      <input 
                         type="text" 
                         id="name"
+                        aria-labelledby="label-name"
                         aria-invalid={!!errors.name}
                         aria-describedby={errors.name ? "name-error" : undefined}
-                        className={`w-full bg-slate-900 border ${errors.name ? 'border-red-500' : 'border-slate-700'} rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-all`}
-                        placeholder="Full Name"
+                        className={getInputClass('name')}
+                        placeholder={focusedField === 'name' ? '' : 'Enter your full name'}
                         value={formData.name}
+                        onFocus={() => setFocusedField('name')}
+                        onBlur={() => setFocusedField(null)}
                         onChange={(e) => {
                           setFormData({...formData, name: e.target.value});
                           if(errors.name) setErrors({...errors, name: undefined});
                         }}
                      />
-                     {errors.name && <p id="name-error" className="text-red-400 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} /> {errors.name}</p>}
+                     {errors.name && <p id="name-error" className="text-red-400 text-[10px] font-bold mt-1.5 flex items-center gap-1 uppercase tracking-wider animate-in slide-in-from-top-1"><AlertCircle size={10} /> {errors.name}</p>}
                    </div>
 
-                   <div className="group relative">
-                     <label htmlFor="email" className={`block text-xs font-bold uppercase text-blue-400 mb-1 tracking-wide transition-all ${formData.email ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1'}`}>
+                   <div className="relative group">
+                     <label id="label-email" htmlFor="email" className={getLabelClass('email')}>
                         Email
                      </label>
                      <input 
                         type="email" 
                         id="email"
+                        aria-labelledby="label-email"
                         aria-invalid={!!errors.email}
                         aria-describedby={errors.email ? "email-error" : undefined}
-                        className={`w-full bg-slate-900 border ${errors.email ? 'border-red-500' : 'border-slate-700'} rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-all`}
-                        placeholder="Email Address"
+                        className={getInputClass('email')}
+                        placeholder={focusedField === 'email' ? '' : 'Email Address'}
                         value={formData.email}
+                        onFocus={() => setFocusedField('email')}
+                        onBlur={() => setFocusedField(null)}
                         onChange={(e) => {
                           setFormData({...formData, email: e.target.value});
                           if(errors.email) setErrors({...errors, email: undefined});
                         }}
                      />
-                     {errors.email && <p id="email-error" className="text-red-400 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} /> {errors.email}</p>}
+                     {errors.email && <p id="email-error" className="text-red-400 text-[10px] font-bold mt-1.5 flex items-center gap-1 uppercase tracking-wider animate-in slide-in-from-top-1"><AlertCircle size={10} /> {errors.email}</p>}
                    </div>
                  </div>
                  
-                 <div className="group relative">
-                   <label htmlFor="message" className={`block text-xs font-bold uppercase text-blue-400 mb-1 tracking-wide transition-all ${formData.message ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1'}`}>
+                 <div className="relative group">
+                   <label id="label-message" htmlFor="message" className={getLabelClass('message')}>
                       Message
                    </label>
                    <textarea 
                       id="message"
+                      aria-labelledby="label-message"
                       aria-invalid={!!errors.message}
                       aria-describedby={errors.message ? "message-error" : undefined}
                       rows={4}
-                      className={`w-full bg-slate-900 border ${errors.message ? 'border-red-500' : 'border-slate-700'} rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-all resize-none`}
-                      placeholder="Tell us about your project requirements..."
+                      className={`${getInputClass('message')} resize-none`}
+                      placeholder={focusedField === 'message' ? '' : 'Describe your project goals and technical requirements...'}
                       value={formData.message}
+                      onFocus={() => setFocusedField('message')}
+                      onBlur={() => setFocusedField(null)}
                       onChange={(e) => {
                         setFormData({...formData, message: e.target.value});
                         if(errors.message) setErrors({...errors, message: undefined});
                       }}
                    />
-                   {errors.message && <p id="message-error" className="text-red-400 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} /> {errors.message}</p>}
+                   {errors.message && <p id="message-error" className="text-red-400 text-[10px] font-bold mt-1.5 flex items-center gap-1 uppercase tracking-wider animate-in slide-in-from-top-1"><AlertCircle size={10} /> {errors.message}</p>}
                  </div>
 
                  <Button 
                    type="submit" 
                    variant="primary" 
                    size="lg" 
-                   className="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all"
+                   className="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all shadow-xl shadow-blue-900/40 font-bold tracking-widest uppercase text-xs"
                    disabled={status === 'sending'}
                    aria-label={status === 'sending' ? 'Sending message...' : 'Send message now'}
                  >
-                   {status === 'sending' ? 'Sending...' : 'Send Message'}
+                   {status === 'sending' ? (
+                     <span className="flex items-center gap-2">
+                       <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                       Sending...
+                     </span>
+                   ) : (
+                     <span className="flex items-center gap-2">
+                       Send Message <Send size={16} />
+                     </span>
+                   )}
                  </Button>
                </form>
              )}
