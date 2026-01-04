@@ -23,7 +23,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
   const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -44,7 +44,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
         isScrolled 
-          ? 'bg-white/95 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 py-2.5 shadow-xl' 
+          ? 'bg-white/95 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 py-3 shadow-xl' 
           : 'bg-transparent py-6'
       }`}
     >
@@ -54,7 +54,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
           className="flex items-center gap-2 group" 
           aria-label={`${COMPANY_NAME} home`}
         >
-          <div className={`w-10 h-10 bg-slate-900 dark:bg-white rounded-xl flex items-center justify-center text-white dark:text-slate-900 shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 ${isScrolled ? 'scale-90' : ''}`}>
+          <div className={`w-10 h-10 bg-slate-900 dark:bg-white rounded-xl flex items-center justify-center text-white dark:text-slate-900 shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 ${isScrolled ? 'scale-90' : 'scale-100'}`}>
             <Terminal size={20} />
           </div>
           <span className={`text-xl font-bold text-slate-900 dark:text-white tracking-tight transition-all duration-300 ${isScrolled ? 'text-lg' : 'text-xl'}`}>{COMPANY_NAME}</span>
@@ -90,7 +90,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
 
           <div className="ml-2">
             <Link to="/contact">
-              <Button variant="primary" size="sm" className={isScrolled ? 'scale-90' : ''} aria-label="Request a consultation">
+              <Button variant="primary" size="sm" className={`transition-all duration-300 ${isScrolled ? 'scale-90' : 'scale-100'}`} aria-label="Request a consultation">
                 Consult Now
               </Button>
             </Link>
