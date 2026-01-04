@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { X, Tag, MonitorPlay, RotateCcw, Check, Play, Pause, Volume2, VolumeX, Info, Subtitles, Linkedin, Twitter, Share2, ImageIcon } from 'lucide-react';
+import { X, Tag, MonitorPlay, RotateCcw, Check, Play, Pause, Volume2, VolumeX, Info, Subtitles, Linkedin, Twitter, Share2, ImageIcon, Maximize, Minimize, AlertTriangle } from 'lucide-react';
 import { PROJECTS } from '../constants';
 import { Project } from '../types';
 import { Button } from './ui/Button';
@@ -39,26 +39,58 @@ interface CustomVideoPlayerProps {
 }
 
 const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl, poster, onClose }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [buffered, setBuffered] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   const [captionsEnabled, setCaptionsEnabled] = useState(true);
   const [showControls, setShowControls] = useState(true);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [videoError, setVideoError] = useState<string | null>(null);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+
     const updateTime = () => setCurrentTime(video.currentTime);
     const updateDuration = () => setDuration(video.duration);
+    const updateProgress = () => {
+      if (video.buffered.length > 0) {
+        setBuffered(video.buffered.end(video.buffered.length - 1));
+      }
+    };
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+    const handleError = () => {
+      setVideoError("The video could not be loaded. Please check your connection or try again later.");
+    };
+
     video.addEventListener('timeupdate', updateTime);
     video.addEventListener('loadedmetadata', updateDuration);
+    video.addEventListener('progress', updateProgress);
+    video.addEventListener('play', handlePlay);
+    video.addEventListener('pause', handlePause);
+    video.addEventListener('error', handleError);
+
     video.play().catch(() => setIsPlaying(false));
+
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+
     return () => {
       video.removeEventListener('timeupdate', updateTime);
       video.removeEventListener('loadedmetadata', updateDuration);
+      video.removeEventListener('progress', updateProgress);
+      video.removeEventListener('play', handlePlay);
+      video.removeEventListener('pause', handlePause);
+      video.removeEventListener('error', handleError);
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
     };
   }, []);
 
@@ -73,7 +105,6 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
     if (videoRef.current) {
       if (isPlaying) videoRef.current.pause();
       else videoRef.current.play();
-      setIsPlaying(!isPlaying);
     }
   };
 
@@ -81,6 +112,14 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
     if (videoRef.current) {
       videoRef.current.muted = !isMuted;
       setIsMuted(!isMuted);
+    }
+  };
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      containerRef.current?.requestFullscreen();
+    } else {
+      document.exitFullscreen();
     }
   };
 
@@ -101,38 +140,100 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
 
   return (
     <div 
-      className="relative w-full h-full bg-black flex flex-col justify-center group"
+      ref={containerRef}
+      className="relative w-full h-full bg-black flex flex-col justify-center group overflow-hidden outline-none"
       onKeyDown={(e) => {
         if (e.key === ' ') { e.preventDefault(); togglePlay(); }
         if (e.key === 'm') { e.preventDefault(); toggleMute(); }
+        if (e.key === 'f') { e.preventDefault(); toggleFullscreen(); }
         if (e.key === 'c') { e.preventDefault(); setCaptionsEnabled(!captionsEnabled); }
-        if (e.key === 'Escape') onClose();
+        if (e.key === 'Escape' && !document.fullscreenElement) onClose();
       }}
       tabIndex={0}
       role="region"
-      aria-label="Video Player"
+      aria-label="High performance video player"
+      onMouseMove={() => {
+        setShowControls(true);
+        // Autohide logic
+        window.clearTimeout((window as any)._controlsTimeout);
+        (window as any)._controlsTimeout = window.setTimeout(() => setShowControls(false), 3000);
+      }}
     >
-      <video ref={videoRef} src={src} poster={poster} className="w-full h-full object-contain" onClick={togglePlay} playsInline crossOrigin="anonymous">
-        {captionsUrl && <track kind="captions" src={captionsUrl} srcLang="en" label="English" default={captionsEnabled} />}
-      </video>
+      {videoError ? (
+        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-slate-950 p-6 text-center">
+          <AlertTriangle size={48} className="text-yellow-500 mb-4 animate-pulse" />
+          <h3 className="text-xl font-black text-white mb-2">Oops! Something went wrong</h3>
+          <p className="text-slate-400 max-w-xs mb-6 text-sm">{videoError}</p>
+          <Button variant="outline" size="sm" onClick={() => window.location.reload()}>Retry Loading</Button>
+        </div>
+      ) : (
+        <video 
+          ref={videoRef} 
+          src={src} 
+          poster={poster} 
+          className="w-full h-full object-contain cursor-pointer" 
+          onClick={togglePlay} 
+          playsInline 
+          crossOrigin="anonymous"
+          aria-hidden="true"
+        >
+          {captionsUrl && <track kind="captions" src={captionsUrl} srcLang="en" label="English" default={captionsEnabled} />}
+        </video>
+      )}
 
-      <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 px-6 pb-6 pt-12 transition-opacity duration-300 z-10 ${showControls || !isPlaying ? 'opacity-100' : 'opacity-0'}`}>
-        <input 
-          type="range" 
-          min="0" 
-          max={duration || 0} 
-          value={currentTime} 
-          onChange={handleSeek} 
-          className="w-full h-1 bg-white/30 rounded-lg appearance-none cursor-pointer accent-blue-500 mb-6" 
-          aria-label="Seek Video" 
-        />
+      <div 
+        className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent px-6 pb-6 pt-16 transition-all duration-500 z-10 ${showControls || !isPlaying ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0 pointer-events-none'}`}
+        role="group" 
+        aria-label="Video controls"
+      >
+        {/* Progress Bar Container */}
+        <div className="relative group/progress mb-6">
+          <div className="relative h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
+            {/* Buffered progress */}
+            <div 
+              className="absolute top-0 left-0 h-full bg-white/20 transition-all duration-300"
+              style={{ width: `${(buffered / (duration || 1)) * 100}%` }}
+            />
+            {/* Current progress */}
+            <div 
+              className="absolute top-0 left-0 h-full bg-blue-600 transition-all duration-100"
+              style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
+            />
+          </div>
+          <input 
+            type="range" 
+            min="0" 
+            max={duration || 0} 
+            step="0.1"
+            value={currentTime} 
+            onChange={handleSeek} 
+            className="absolute top-1/2 -translate-y-1/2 left-0 w-full h-4 bg-transparent appearance-none cursor-pointer accent-blue-500 hover:accent-blue-400 opacity-0 group-hover/progress:opacity-100 transition-opacity z-20" 
+            aria-label="Seek video position" 
+            aria-valuemin={0}
+            aria-valuemax={duration || 0}
+            aria-valuenow={currentTime}
+            aria-valuetext={formatTime(currentTime)}
+          />
+        </div>
+
         <div className="flex items-center justify-between text-white">
           <div className="flex items-center gap-6">
-            <button onClick={togglePlay} className="p-2 hover:bg-white/20 rounded-full transition-all active:scale-90" aria-label={isPlaying ? "Pause" : "Play"}>
-              {isPlaying ? <Pause size={24} fill="currentColor" /> : <Play size={24} fill="currentColor" />}
+            <button 
+              onClick={togglePlay} 
+              className="p-2 hover:bg-white/20 rounded-full transition-all active:scale-90 hover:scale-110" 
+              aria-label={isPlaying ? "Pause video" : "Play video"}
+              aria-pressed={isPlaying}
+            >
+              {isPlaying ? <Pause size={28} fill="currentColor" /> : <Play size={28} fill="currentColor" className="translate-x-0.5" />}
             </button>
-            <div className="flex items-center gap-3 group/vol">
-              <button onClick={toggleMute} className="p-1 hover:bg-white/10 rounded" aria-label={isMuted ? "Unmute" : "Mute"}>
+            
+            <div className="flex items-center gap-4 group/vol">
+              <button 
+                onClick={toggleMute} 
+                className="p-1.5 hover:bg-white/20 rounded-lg transition-all hover:scale-110 active:scale-90" 
+                aria-label={isMuted ? "Unmute video" : "Mute video"}
+                aria-pressed={isMuted}
+              >
                 {isMuted || volume === 0 ? <VolumeX size={20} /> : <Volume2 size={20} />}
               </button>
               <input 
@@ -142,29 +243,47 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
                 step="0.05" 
                 value={isMuted ? 0 : volume} 
                 onChange={handleVolumeChange} 
-                className="w-24 h-1 bg-white/30 rounded appearance-none accent-blue-500 cursor-pointer" 
-                aria-label="Volume Slider" 
+                className="w-0 overflow-hidden group-hover/vol:w-24 h-1 bg-white/30 rounded appearance-none accent-white cursor-pointer transition-all duration-300" 
+                aria-label="Adjust volume" 
+                aria-valuemin={0}
+                aria-valuemax={1}
+                aria-valuenow={isMuted ? 0 : volume}
               />
             </div>
-            <span className="text-sm font-mono tracking-tight">{formatTime(currentTime)} / {formatTime(duration)}</span>
+            
+            <span className="text-sm font-mono tracking-tight text-slate-300">
+              {formatTime(currentTime)} <span className="text-white/40">/</span> {formatTime(duration)}
+            </span>
           </div>
+
           <div className="flex items-center gap-4">
             {captionsUrl && (
               <button 
                 onClick={() => setCaptionsEnabled(!captionsEnabled)} 
-                className={`p-2 rounded-lg transition-all ${captionsEnabled ? 'text-blue-400 bg-white/10' : 'text-white/50 hover:text-white'}`} 
-                aria-label="Toggle Captions" 
+                className={`p-2.5 rounded-xl transition-all hover:scale-110 active:scale-90 ${captionsEnabled ? 'text-blue-400 bg-blue-500/10' : 'text-white/60 hover:text-white'}`} 
+                aria-label="Toggle closed captions" 
                 aria-pressed={captionsEnabled}
               >
-                <Subtitles size={20} />
+                <Subtitles size={22} />
               </button>
             )}
+            
+            <button 
+              onClick={toggleFullscreen} 
+              className="p-2.5 rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-all hover:scale-110 active:scale-90"
+              aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"}
+            >
+              {isFullscreen ? <Minimize size={22} /> : <Maximize size={22} />}
+            </button>
+
+            <div className="w-px h-6 bg-white/20 mx-2" />
+
             <button 
               onClick={onClose} 
-              className="text-xs font-bold uppercase tracking-widest px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors border border-white/20"
-              aria-label="Exit Player"
+              className="text-[10px] font-black uppercase tracking-widest px-5 py-2.5 bg-white/10 rounded-xl hover:bg-white/20 transition-all border border-white/20 active:scale-95"
+              aria-label="Exit video player"
             >
-              Exit
+              Exit Player
             </button>
           </div>
         </div>
