@@ -31,10 +31,11 @@ export const Hero: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [typedTitle, setTypedTitle] = useState("");
   const [typedCode, setTypedCode] = useState("");
+  const [typedTagline, setTypedTagline] = useState("");
   const [scrollY, setScrollY] = useState(0);
   const heroRef = useRef<HTMLElement>(null);
 
-  // Synchronized Typing Animations
+  // High-fidelity typing animation for the Main Title
   useEffect(() => {
     let titleIndex = 0;
     const typeTitle = () => {
@@ -49,6 +50,21 @@ export const Hero: React.FC = () => {
     return () => clearTimeout(timeout);
   }, []);
 
+  // Tagline typing animation
+  useEffect(() => {
+    let taglineIndex = 0;
+    const typeTagline = () => {
+      if (taglineIndex <= TAGLINE.length) {
+        setTypedTagline(TAGLINE.slice(0, taglineIndex));
+        taglineIndex++;
+        setTimeout(typeTagline, 40);
+      }
+    };
+    const timeout = setTimeout(typeTagline, 2400); // Start after title begins
+    return () => clearTimeout(timeout);
+  }, []);
+
+  // Natural human-like typing animation for the Code Snippet
   useEffect(() => {
     let charIndex = 0;
     let timeoutId: ReturnType<typeof setTimeout>;
@@ -104,7 +120,7 @@ export const Hero: React.FC = () => {
     <section 
       ref={heroRef} 
       id="home" 
-      className="relative pt-28 pb-24 md:pt-48 md:pb-40 lg:pt-60 lg:pb-56 overflow-hidden min-h-[90vh] lg:min-h-screen flex items-center bg-slate-950"
+      className="relative pt-32 pb-24 md:pt-48 md:pb-40 lg:pt-60 lg:pb-56 overflow-hidden min-h-[90vh] lg:min-h-screen flex items-center bg-slate-950"
     >
       {/* Parallax Background with optimized dark overlay for readability */}
       <div className="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
@@ -139,8 +155,9 @@ export const Hero: React.FC = () => {
             </h1>
             
             <div className={`space-y-10 md:space-y-12 transition-all duration-1000 delay-300 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              <p className="text-lg sm:text-xl md:text-2xl text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium">
-                {TAGLINE}. High-performance engineering for businesses that refuse to settle for second best.
+              <p className="text-lg sm:text-xl md:text-2xl text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium min-h-[3em]">
+                {typedTagline}
+                <span className="inline-block w-[2px] h-[0.8em] bg-slate-400 ml-1 animate-pulse align-middle" />
               </p>
 
               <div className="flex flex-col items-center lg:items-start gap-8">
@@ -150,7 +167,7 @@ export const Hero: React.FC = () => {
                     <Button 
                       size="lg" 
                       variant="primary" 
-                      className="group relative transition-all duration-500 hover:scale-105 hover:-translate-y-1 hover:bg-blue-500 px-10 md:px-12 shadow-2xl shadow-blue-600/30 active:scale-95 w-full bg-blue-600 text-white border-none rounded-2xl"
+                      className="group relative transition-all duration-500 hover:scale-105 hover:-translate-y-1 hover:bg-blue-500 hover:shadow-blue-500/40 px-10 md:px-12 shadow-2xl shadow-blue-600/30 active:scale-95 w-full bg-blue-600 text-white border-none rounded-2xl"
                     >
                       Request a Quote
                       <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
@@ -160,7 +177,7 @@ export const Hero: React.FC = () => {
                     <Button 
                       variant="secondary" 
                       size="lg" 
-                      className="group transition-all duration-500 hover:scale-105 hover:-translate-y-1 bg-white/10 backdrop-blur-md text-white border border-white/10 active:scale-95 w-full rounded-2xl flex items-center justify-center gap-2 px-10 md:px-12 hover:bg-white/20 shadow-xl"
+                      className="group transition-all duration-500 hover:scale-105 hover:-translate-y-1 bg-white/10 backdrop-blur-md text-white border border-white/10 active:scale-95 w-full rounded-2xl flex items-center justify-center gap-2 px-10 md:px-12 hover:bg-white/25 shadow-xl"
                     >
                       <PlayCircle size={20} className="transition-transform group-hover:scale-110" />
                       Request a Demo
@@ -172,7 +189,7 @@ export const Hero: React.FC = () => {
                   <Button 
                     variant="ghost" 
                     size="md" 
-                    className="group transition-all duration-500 hover:scale-105 hover:bg-white/10 hover:text-white text-slate-400 rounded-2xl flex items-center justify-center gap-2 border border-white/10 hover:border-white/20 px-10 w-full lg:w-auto"
+                    className="group transition-all duration-500 hover:scale-105 hover:bg-white/15 hover:text-white text-slate-400 rounded-2xl flex items-center justify-center gap-2 border border-white/10 hover:border-white/30 px-10 w-full lg:w-auto"
                   >
                     <MessageCircle size={18} className="transition-transform group-hover:rotate-12" />
                     Contact Us Directly
@@ -236,7 +253,7 @@ export const Hero: React.FC = () => {
                   className="w-full h-full object-cover opacity-50 transition-transform duration-1000 group-hover/img:scale-110" 
                   alt="Modern Software Engineering Environment"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=1200';
+                    (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2070';
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/30 via-transparent to-slate-950/40 pointer-events-none" />

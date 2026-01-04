@@ -18,7 +18,7 @@ export const FeaturedIn: React.FC = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Passive scroll listener for parallax calculation
+      // Use requestAnimationFrame for smooth parallax updates
       window.requestAnimationFrame(() => {
         setScrollY(window.scrollY);
       });
@@ -29,8 +29,6 @@ export const FeaturedIn: React.FC = () => {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         setIsVisible(true);
-        // We don't disconnect so we can potentially trigger animations multiple times 
-        // or handle persistent visibility logic if needed, but for entry, once is fine.
         observer.unobserve(entry.target);
       }
     }, { threshold: 0.15 });
@@ -43,12 +41,14 @@ export const FeaturedIn: React.FC = () => {
     };
   }, []);
 
-  // Calculate parallax offset based on section position
+  // Calculate parallax offset based on section position with smooth factor
   const getParallaxY = () => {
     if (!sectionRef.current) return 0;
     const rect = sectionRef.current.getBoundingClientRect();
     const sectionTop = rect.top + window.scrollY;
-    return (scrollY - sectionTop) * 0.1; // Slow parallax factor
+    // Calculate relative distance from viewport
+    const offset = scrollY - sectionTop;
+    return offset * 0.15; // Refined parallax factor for subtle depth
   };
 
   return (
@@ -56,17 +56,18 @@ export const FeaturedIn: React.FC = () => {
       ref={sectionRef} 
       className="relative py-28 md:py-36 lg:py-48 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 overflow-hidden"
     >
-      {/* Parallax Background Layer */}
+      {/* Refined Parallax Background Layer */}
       <div className="absolute inset-0 pointer-events-none -z-10">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-[0.03] dark:opacity-[0.05] grayscale"
+          className="absolute inset-0 bg-cover bg-center opacity-[0.05] dark:opacity-[0.08] grayscale will-change-transform"
           style={{ 
             backgroundImage: 'url("https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=2070")',
-            transform: `translate3d(0, ${getParallaxY()}px, 0) scale(1.1)` 
+            transform: `translate3d(0, ${getParallaxY()}px, 0) scale(1.15)` 
           }}
           aria-hidden="true"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white dark:from-slate-900 dark:to-slate-900" />
+        {/* Soft edge masking */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white dark:from-slate-900 dark:via-transparent dark:to-slate-900" />
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
@@ -101,7 +102,7 @@ export const FeaturedIn: React.FC = () => {
           </div>
 
           {/* Call to action with slide-up effect */}
-          <div className={`flex flex-col items-center pt-16 border-t border-slate-50 dark:border-slate-800/50 transition-all duration-1000 delay-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className={`flex flex-col items-center pt-16 border-t border-slate-100 dark:border-slate-800/50 transition-all duration-1000 delay-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 font-medium max-w-md text-center">
               Our engineering standards are vetted by the industry's most demanding critics and innovative leaders.
             </p>
@@ -109,7 +110,7 @@ export const FeaturedIn: React.FC = () => {
               <Button 
                 variant="outline" 
                 size="lg" 
-                className="group rounded-full px-12 py-7 transition-all hover:bg-slate-900 hover:text-white dark:hover:bg-blue-600 dark:hover:border-blue-600 shadow-xl shadow-blue-500/5 active:scale-95 border-2"
+                className="group rounded-full px-12 py-7 transition-all hover:bg-slate-950 hover:text-white dark:hover:bg-blue-600 dark:hover:border-blue-600 shadow-xl shadow-blue-500/10 active:scale-95 border-2 hover:shadow-blue-500/20"
               >
                 <span className="flex items-center gap-2">
                   View Our Work

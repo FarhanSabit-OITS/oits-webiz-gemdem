@@ -42,10 +42,10 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
+      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ease-in-out ${
         isScrolled 
-          ? 'bg-white/95 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 py-3 shadow-xl' 
-          : 'bg-transparent py-6'
+          ? 'bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800/50 py-3 shadow-2xl' 
+          : 'bg-transparent py-8'
       }`}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
@@ -90,7 +90,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
 
           <div className="ml-2">
             <Link to="/contact">
-              <Button variant="primary" size="sm" className={`transition-all duration-300 ${isScrolled ? 'scale-90' : 'scale-100'}`} aria-label="Request a consultation">
+              <Button variant="primary" size="sm" className={`transition-all duration-300 rounded-full ${isScrolled ? 'scale-90' : 'scale-100'}`} aria-label="Request a consultation">
                 Consult Now
               </Button>
             </Link>
@@ -141,7 +141,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
               </Link>
             ))}
             <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>
-              <Button className="w-full mt-4" aria-label="Request a consultation">
+              <Button className="w-full mt-4 rounded-xl" aria-label="Request a consultation">
                 Consult Now
               </Button>
             </Link>
