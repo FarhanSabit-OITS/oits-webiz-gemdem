@@ -193,9 +193,10 @@ const ProjectCard = ({ project, onClick, onViewDemo, highlightedTags, index }: a
           alt={project.title} 
           loading="lazy"
           onLoad={() => setImageLoaded(true)} 
-          className={`w-full h-full object-cover transition-all duration-1000 group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`} 
+          className={`w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`} 
         />
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col gap-4 items-center justify-center bg-slate-900/60 backdrop-blur-sm">
+        {/* Hover-only buttons */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col gap-4 items-center justify-center bg-slate-900/60 backdrop-blur-sm z-10">
           <button 
             className="bg-white text-slate-900 px-8 py-3 rounded-full font-bold text-xs shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 hover:bg-blue-600 hover:text-white active:scale-95" 
             onClick={(e) => { e.stopPropagation(); onClick(); }}
@@ -207,7 +208,7 @@ const ProjectCard = ({ project, onClick, onViewDemo, highlightedTags, index }: a
               className="bg-blue-600 text-white px-8 py-3 rounded-full font-bold text-xs shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-75 hover:bg-blue-700 hover:scale-105 hover:shadow-blue-500/50 flex items-center gap-2 active:scale-95" 
               onClick={(e) => { e.stopPropagation(); onViewDemo(); }}
             >
-              <MonitorPlay size={18} /> Watch Demo
+              <MonitorPlay size={18} /> View Demo
             </button>
           )}
         </div>

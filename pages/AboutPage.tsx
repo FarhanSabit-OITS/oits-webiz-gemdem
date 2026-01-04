@@ -1,9 +1,8 @@
-
 import React, { useState } from 'react';
 import { About } from '../components/About';
 import { Button } from '../components/ui/Button';
 import { Link } from 'react-router-dom';
-import { ChevronDown, HelpCircle } from 'lucide-react';
+import { ChevronDown, HelpCircle, Briefcase, Coffee, Globe, GraduationCap } from 'lucide-react';
 
 const LOGOS = [
   { name: 'TechFlow' },
@@ -37,7 +36,6 @@ const FAQS = [
   }
 ];
 
-// Fix: Use React.FC to ensure proper typing for functional components, specifically to allow the 'key' prop when mapping.
 const AccordionItem: React.FC<{ question: string; answer: string }> = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -80,6 +78,61 @@ const AboutPage: React.FC = () => {
       </div>
 
       <About />
+
+      {/* Careers Section */}
+      <section className="py-24 md:py-32 bg-white dark:bg-slate-950">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="order-2 lg:order-1">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-6">
+                <Briefcase size={14} /> Join the Innovation Lab
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-8 tracking-tight">Engineer your <br/> own future.</h2>
+              <p className="text-slate-600 dark:text-slate-400 text-lg mb-12 leading-relaxed font-medium">
+                At OITS Dhaka, we're always looking for senior-level talent who are passionate about solving hard problems. Our culture is built on technical autonomy, continuous learning, and global collaboration.
+              </p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
+                {[
+                  { icon: Coffee, title: "Flexible Flow", desc: "Remote-first culture with asynchronous communication workflows." },
+                  { icon: GraduationCap, title: "Learning Lab", desc: "Annual budget for courses, certifications, and tech conferences." },
+                  { icon: Globe, title: "Global Scale", desc: "Work on high-impact projects for international startups and enterprises." },
+                  { icon: Briefcase, title: "Equity & Growth", desc: "Competitive compensation with performance-based stock options." }
+                ].map((benefit, idx) => (
+                  <div key={idx} className="p-6 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-100 dark:border-slate-800 group hover:border-blue-500/30 transition-all">
+                    <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                      <benefit.icon size={20} />
+                    </div>
+                    <h4 className="font-bold text-slate-900 dark:text-white mb-2">{benefit.title}</h4>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{benefit.desc}</p>
+                  </div>
+                ))}
+              </div>
+              
+              <Link to="/contact">
+                <Button variant="primary" size="lg" className="rounded-2xl px-12 shadow-xl shadow-blue-500/20">
+                  Join Our Team
+                </Button>
+              </Link>
+            </div>
+            
+            <div className="order-1 lg:order-2 relative">
+               <div className="absolute -inset-10 bg-blue-600/5 rounded-full blur-3xl animate-pulse -z-10" />
+               <div className="relative aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white dark:border-slate-900">
+                  <img 
+                    src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&q=80&w=1000" 
+                    className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
+                    alt="Team culture at OITS Dhaka"
+                  />
+                  <div className="absolute bottom-8 left-8 right-8 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-6 rounded-3xl border border-slate-100 dark:border-slate-800">
+                    <p className="text-slate-900 dark:text-white font-bold text-lg mb-1">"Best engineering culture I've ever been part of."</p>
+                    <p className="text-blue-600 dark:text-blue-400 text-xs font-black uppercase tracking-widest">— Lead Frontend Engineer</p>
+                  </div>
+               </div>
+            </div>
+          </div>
+        </div>
+      </section>
       
       {/* FAQ Section */}
       <section className="py-24 bg-slate-50 dark:bg-slate-900/30">

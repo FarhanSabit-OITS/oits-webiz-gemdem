@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Globe, Smartphone, Users, Cloud, ArrowUpRight, X, Check } from 'lucide-react';
+import { Globe, Smartphone, Users, Cloud, ArrowUpRight, X, Check, BookOpen } from 'lucide-react';
 import { SERVICES } from '../constants';
 import { SectionId, Service } from '../types';
 import { Button } from './ui/Button';
@@ -66,6 +66,7 @@ export const Services: React.FC<ServicesProps> = ({ limit }) => {
               aria-label={`Service: ${service.title}. Click for details.`}
               onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setSelectedService(service)}
             >
+              {/* Icon with hover bounce animation */}
               <div className="w-16 h-16 shrink-0 bg-white dark:bg-slate-700 rounded-2xl flex items-center justify-center text-slate-900 dark:text-white shadow-sm mb-10 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 group-hover:animate-subtle-bounce border border-slate-100 dark:border-slate-600">
                 {iconMap[service.icon]}
               </div>
@@ -97,8 +98,8 @@ export const Services: React.FC<ServicesProps> = ({ limit }) => {
 
       {selectedService && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-300" role="dialog" aria-modal="true">
-          <div className="w-full max-w-3xl bg-white dark:bg-slate-900 rounded-[3rem] shadow-2xl overflow-hidden border-2 border-slate-50 dark:border-slate-800 animate-in zoom-in-95 duration-300">
-            <div className="p-10 md:p-16 relative">
+          <div className="w-full max-w-3xl bg-white dark:bg-slate-900 rounded-[3rem] shadow-2xl overflow-hidden border-2 border-slate-50 dark:border-slate-800 animate-in zoom-in-95 duration-300 max-h-[90vh] flex flex-col">
+            <div className="p-10 md:p-16 relative overflow-y-auto">
               <button onClick={() => setSelectedService(null)} className="absolute top-10 right-10 p-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-500" aria-label="Close">
                 <X size={28} />
               </button>
@@ -133,7 +134,12 @@ export const Services: React.FC<ServicesProps> = ({ limit }) => {
                 <Link to="/contact" className="flex-1" onClick={() => setSelectedService(null)}>
                   <Button variant="primary" className="w-full py-8 text-lg rounded-2xl shadow-xl shadow-blue-600/20">Start Your Roadmap</Button>
                 </Link>
-                <button onClick={() => setSelectedService(null)} className="px-8 py-4 text-sm font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Maybe later</button>
+                <button 
+                  onClick={() => setSelectedService(null)} 
+                  className="flex items-center justify-center gap-2 px-8 py-4 text-sm font-bold text-slate-500 hover:text-blue-600 dark:hover:text-white transition-colors"
+                >
+                  <BookOpen size={18} /> Learn More
+                </button>
               </div>
             </div>
           </div>
