@@ -38,7 +38,7 @@ export const Hero: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
   const heroRef = useRef<HTMLElement>(null);
 
-  // Smooth Parallax Scroll Tracking
+  // Smooth Parallax and Intersection Tracking
   useEffect(() => {
     const handleScroll = () => {
       window.requestAnimationFrame(() => {
@@ -59,9 +59,9 @@ export const Hero: React.FC = () => {
     };
   }, []);
 
-  // Sequential Typing Animation Engine
+  // Sequential Typing Animation logic
   
-  // 1. Title Typing (70ms/char)
+  // 1. Title Typing (80ms/char for natural pace)
   useEffect(() => {
     if (!isVisible) return;
     let titleIndex = 0;
@@ -69,16 +69,16 @@ export const Hero: React.FC = () => {
       if (titleIndex <= TITLE_TEXT.length) {
         setTypedTitle(TITLE_TEXT.slice(0, titleIndex));
         titleIndex++;
-        setTimeout(typeTitle, 70);
+        setTimeout(typeTitle, 80);
       } else {
         setIsTitleDone(true);
       }
     };
-    const timeout = setTimeout(typeTitle, 500);
+    const timeout = setTimeout(typeTitle, 600);
     return () => clearTimeout(timeout);
   }, [isVisible]);
 
-  // 2. Tagline Typing (40ms/char) - Starts after title
+  // 2. Tagline Typing (45ms/char) - Starts after title
   useEffect(() => {
     if (!isTitleDone) return;
     let taglineIndex = 0;
@@ -86,7 +86,7 @@ export const Hero: React.FC = () => {
       if (taglineIndex <= TAGLINE.length) {
         setTypedTagline(TAGLINE.slice(0, taglineIndex));
         taglineIndex++;
-        setTimeout(typeTagline, 40);
+        setTimeout(typeTagline, 45);
       } else {
         setIsTaglineDone(true);
       }
@@ -95,7 +95,7 @@ export const Hero: React.FC = () => {
     return () => clearTimeout(timeout);
   }, [isTitleDone]);
 
-  // 3. Code Snippet Typing (Natural line-by-line feel)
+  // 3. Code Snippet Typing (Natural character-by-character with syntax pauses)
   useEffect(() => {
     if (!isTaglineDone) return;
     let charIndex = 0;
@@ -105,13 +105,13 @@ export const Hero: React.FC = () => {
       if (charIndex <= CODE_SNIPPET.length) {
         setTypedCode(CODE_SNIPPET.slice(0, charIndex));
         const char = CODE_SNIPPET[charIndex - 1];
-        let delay = 30; // Base speed
+        let delay = 30; // Faster base speed for code
         
-        // Logical pauses for "human-like" typing feel
-        if (char === '\n') delay = 500; // Pause at line breaks
-        else if (char === ';') delay = 250; // Pause at statement end
-        else if (char === '{' || char === '}') delay = 400; // Pause at blocks
-        else if (char === '.') delay = 150; // Short pause for property access
+        // Contextual pauses
+        if (char === '\n') delay = 500;
+        else if (char === ';') delay = 250;
+        else if (char === '{' || char === '}') delay = 400;
+        else if (char === ',') delay = 150;
 
         charIndex++;
         timeoutId = setTimeout(typeCode, delay);
@@ -120,7 +120,7 @@ export const Hero: React.FC = () => {
       }
     };
 
-    const initialDelay = setTimeout(typeCode, 700);
+    const initialDelay = setTimeout(typeCode, 800);
     return () => {
       clearTimeout(timeoutId);
       clearTimeout(initialDelay);
@@ -131,9 +131,9 @@ export const Hero: React.FC = () => {
     <section 
       ref={heroRef} 
       id="home" 
-      className="relative pt-32 pb-24 md:pt-48 md:pb-40 lg:pt-60 lg:pb-56 overflow-hidden min-h-[95vh] lg:min-h-screen flex items-center bg-slate-950 transition-colors duration-500"
+      className="relative pt-32 pb-24 md:pt-48 md:pb-40 lg:pt-60 lg:pb-56 overflow-hidden min-h-[95vh] lg:min-h-screen flex items-center bg-slate-950"
     >
-      {/* Dynamic Parallax Background with Tuned Overlay */}
+      {/* Subtle Parallax Background Layer */}
       <div className="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-40 scale-110 will-change-transform"
@@ -143,9 +143,9 @@ export const Hero: React.FC = () => {
           }}
           aria-hidden="true"
         />
-        {/* Dark overlay (80% opacity) for text punchiness */}
-        <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[2px]" />
-        {/* Shadow gradient for footer transition */}
+        {/* Optimized Dark Overlay for readability (75% opacity) */}
+        <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-[1px]" />
+        {/* Soft edge masking */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-transparent to-slate-950" />
       </div>
 
@@ -158,8 +158,8 @@ export const Hero: React.FC = () => {
               <span>Future-Proof Software Engineering</span>
             </div>
             
-            {/* Title with Cursor */}
-            <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-7xl xl:text-9xl font-black text-white tracking-tighter leading-[1.0] min-h-[2.1em] md:min-h-[1.1em]">
+            {/* Title with Scroll-triggered Fade & Slide */}
+            <h1 className={`text-4xl sm:text-6xl md:text-8xl lg:text-7xl xl:text-9xl font-black text-white tracking-tighter leading-[1.0] min-h-[2.1em] md:min-h-[1.1em] transition-all duration-1000 delay-100 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               Building the <br className="hidden md:block"/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-blue-200 inline-block">
                 {typedTitle}
@@ -170,7 +170,6 @@ export const Hero: React.FC = () => {
             </h1>
             
             <div className={`space-y-10 md:space-y-12 transition-all duration-1000 delay-300 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              {/* Tagline with Cursor */}
               <p className="text-lg sm:text-xl md:text-3xl text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium min-h-[3.5rem] md:min-h-0">
                 {typedTagline}
                 {isTitleDone && !isTaglineDone && (
@@ -178,14 +177,14 @@ export const Hero: React.FC = () => {
                 )}
               </p>
 
-              {/* Refined CTAs with polished scaling and transitions */}
+              {/* Refined Buttons with Smooth Hover Interactions */}
               <div className="flex flex-col items-center lg:items-start gap-8">
                 <div className="flex flex-col sm:flex-row items-center gap-5 sm:gap-6 justify-center lg:justify-start w-full">
                   <Link to="/contact" className="w-full sm:w-auto">
                     <Button 
                       size="lg" 
                       variant="primary" 
-                      className="group relative transition-all duration-500 hover:scale-[1.05] hover:-translate-y-1 hover:bg-blue-500 hover:shadow-[0_20px_50px_rgba(37,99,235,0.4)] px-12 md:px-14 shadow-2xl shadow-blue-600/30 active:scale-95 w-full bg-blue-600 text-white border-none rounded-2xl overflow-hidden font-black"
+                      className="group relative transition-all duration-500 hover:scale-[1.04] hover:-translate-y-1 hover:bg-blue-500 hover:shadow-[0_20px_50px_rgba(37,99,235,0.4)] px-12 md:px-14 shadow-2xl shadow-blue-600/30 active:scale-95 w-full bg-blue-600 text-white border-none rounded-2xl overflow-hidden font-black"
                     >
                       <span className="relative z-10 flex items-center justify-center gap-2">
                         Request a Quote
@@ -197,7 +196,7 @@ export const Hero: React.FC = () => {
                     <Button 
                       variant="secondary" 
                       size="lg" 
-                      className="group transition-all duration-500 hover:scale-[1.05] hover:-translate-y-1 bg-white/10 backdrop-blur-md text-white border border-white/20 active:scale-95 w-full rounded-2xl flex items-center justify-center gap-2 px-12 md:px-14 hover:bg-white/20 hover:shadow-[0_20px_50px_rgba(255,255,255,0.1)] shadow-xl font-black"
+                      className="group transition-all duration-500 hover:scale-[1.04] hover:-translate-y-1 bg-white/10 backdrop-blur-md text-white border border-white/20 active:scale-95 w-full rounded-2xl flex items-center justify-center gap-2 px-12 md:px-14 hover:bg-white/20 hover:shadow-[0_20px_50px_rgba(255,255,255,0.1)] shadow-xl font-black"
                     >
                       <PlayCircle size={20} className="transition-transform group-hover:scale-110" />
                       Request a Demo
@@ -217,8 +216,8 @@ export const Hero: React.FC = () => {
                 </Link>
               </div>
 
-              {/* Trusted By Grid with subtle hover effects */}
-              <div className="pt-12 md:pt-16 transition-all duration-1000 delay-500 border-t border-white/10 max-w-2xl mx-auto lg:mx-0">
+              {/* Trusted By (Staggered Entrance) */}
+              <div className={`pt-12 md:pt-16 transition-all duration-1000 delay-500 border-t border-white/10 max-w-2xl mx-auto lg:mx-0 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
                 <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] mb-10 text-center lg:text-left">
                   Trusted by Global Innovators
                 </p>
@@ -242,11 +241,11 @@ export const Hero: React.FC = () => {
             </div>
           </div>
 
-          {/* Visual Area: Floating Terminal with Typing Animation */}
+          {/* Code Visual - Character-by-character animation */}
           <div className={`flex-1 w-full max-w-2xl transition-all duration-1000 delay-300 transform ${isVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-12 scale-95'}`}>
             <div className="relative group/visual">
               
-              {/* Floating Terminal with Persistent Cursor */}
+              {/* Terminal with blinking cursor */}
               <div className="absolute -top-12 -left-8 w-full max-w-[320px] sm:max-w-sm z-20 hidden lg:block animate-float">
                 <div className="bg-slate-950/95 backdrop-blur-2xl rounded-[2.5rem] border border-white/10 shadow-2xl overflow-hidden ring-1 ring-white/10">
                   <div className="flex items-center justify-between px-6 py-4 bg-slate-900/50 border-b border-white/5">
@@ -261,8 +260,8 @@ export const Hero: React.FC = () => {
                   </div>
                   <div className="p-8 font-mono text-[11px] lg:text-[12px] leading-relaxed text-blue-300/90 h-80 overflow-hidden whitespace-pre-wrap relative bg-gradient-to-b from-transparent to-slate-950/20">
                     {typedCode}
-                    {/* Blinking cursor at the end (persistent once tagline starts typing) */}
-                    {isTaglineDone && (
+                    {/* Blinking Cursor */}
+                    {(isTaglineDone || !isCodeDone) && (
                       <span className="inline-block w-2.5 h-4 bg-blue-500 align-middle ml-1 animate-pulse shadow-[0_0_15px_rgba(59,130,246,0.8)]" />
                     )}
                   </div>
