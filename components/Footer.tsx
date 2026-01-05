@@ -1,8 +1,8 @@
 import React from 'react';
-import { Terminal, Github, Linkedin, Twitter, Facebook, Sun, Moon, Briefcase } from 'lucide-react';
+import { Terminal, Github, Linkedin, Twitter, Facebook, Sun, Moon } from 'lucide-react';
 import { COMPANY_NAME, NAV_ITEMS, SERVICES } from '../constants';
 import { SectionId } from '../types';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 interface FooterProps {
   theme: 'light' | 'dark';
@@ -12,51 +12,54 @@ interface FooterProps {
 const SocialLink = ({ href, icon: Icon, label }: { href: string; icon: any; label: string }) => (
   <a 
     href={href} 
-    className="group relative p-2 rounded-lg hover:bg-slate-800 transition-colors"
+    className="group relative p-3 rounded-xl hover:bg-slate-800 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
     aria-label={label}
   >
-    <div className="group-hover:animate-subtle-bounce">
-      <Icon size={20} className="text-slate-400 group-hover:text-white transition-colors" />
+    <div className="group-hover:scale-115 group-hover:rotate-6 transition-transform duration-300">
+      <Icon size={20} className="text-slate-400 group-hover:text-blue-400 transition-colors" />
     </div>
     
-    {/* Tooltip */}
-    <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs font-medium text-white bg-slate-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl border border-slate-700 transform translate-y-2 group-hover:translate-y-0 duration-200">
+    {/* Enhanced Tooltip with Scale Animation */}
+    <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.15em] text-white bg-blue-600 rounded-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none shadow-xl scale-75 group-hover:scale-100 group-focus:scale-100 origin-bottom z-20">
       {label}
-      <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-slate-700"></span>
+      <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-[6px] border-transparent border-t-blue-600"></span>
     </span>
   </a>
 );
 
-export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
-  const navigate = useNavigate();
-
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href.startsWith('#')) {
-      e.preventDefault();
-      const id = href.substring(1);
-      const element = document.getElementById(id);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        navigate(`/${href}`);
-      }
-    }
-  };
+// Fix: Making children optional to resolve TypeScript "missing children" prop errors encountered during map iterations
+const FooterLink = ({ href, children }: { href: string; children?: React.ReactNode }) => {
+  const content = (
+    <span className="inline-block transition-all duration-300 group-hover:translate-x-1 group-hover:text-blue-400">
+      {children}
+    </span>
+  );
 
   return (
-    <footer className="bg-slate-950 text-slate-300 py-16 border-t border-slate-800">
+    <Link 
+      to={href} 
+      className="group flex items-center text-slate-400 hover:text-blue-400 transition-all py-1.5 font-medium text-sm"
+    >
+      {content}
+    </Link>
+  );
+};
+
+export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
+  return (
+    <footer className="bg-slate-950 text-slate-300 py-24 border-t border-slate-900 overflow-hidden">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
           
-          <div className="space-y-6">
-            <a href={`#${SectionId.HOME}`} className="flex items-center gap-2 text-white" onClick={(e) => handleNavClick(e, `#${SectionId.HOME}`)}>
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <Terminal size={16} className="text-white" />
+          <div className="space-y-8">
+            <Link to="/" className="flex items-center gap-3 text-white group">
+              <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">
+                <Terminal size={20} className="text-white" />
               </div>
-              <span className="text-xl font-bold">{COMPANY_NAME}</span>
-            </a>
-            <p className="text-sm leading-relaxed text-slate-400">
-              Empowering businesses through innovative software solutions. Your digital transformation partner.
+              <span className="text-2xl font-black tracking-tighter">{COMPANY_NAME}</span>
+            </Link>
+            <p className="text-sm leading-relaxed text-slate-400 font-medium">
+              We architect resilient digital systems that power the world's most innovative brands. From concept to scale, we are your strategic engineering partner.
             </p>
             <div className="flex gap-2">
               <SocialLink href="#" icon={Github} label="GitHub" />
@@ -65,74 +68,82 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
               <SocialLink href="#" icon={Facebook} label="Facebook" />
             </div>
             
-            <div className="pt-2">
+            <div className="pt-4">
                <button
                   onClick={toggleTheme}
-                  className="flex items-center gap-2 text-sm font-medium hover:text-white transition-colors bg-slate-900 px-3 py-2 rounded-lg border border-slate-800 hover:border-slate-700"
+                  className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] bg-slate-900 px-6 py-3.5 rounded-2xl border border-slate-800 hover:border-blue-500/50 hover:bg-slate-800 transition-all duration-500 group shadow-xl hover:shadow-blue-500/5"
                   aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
                >
-                  {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-                  <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+                  <div className="transition-transform duration-500 group-hover:rotate-45">
+                    {theme === 'dark' ? <Sun size={16} className="text-yellow-400" /> : <Moon size={16} className="text-blue-400" />}
+                  </div>
+                  <span className="group-hover:text-white transition-colors">
+                    {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                  </span>
                </button>
             </div>
           </div>
 
           <div>
-            <h4 className="text-white font-bold mb-6">Company</h4>
-            <ul className="space-y-4">
+            <h4 className="text-white text-xs font-black uppercase tracking-[0.3em] mb-10">Company</h4>
+            <ul className="space-y-2">
               {NAV_ITEMS.map((item) => (
                 <li key={item.label}>
-                  <a href={item.href} onClick={(e) => handleNavClick(e, item.href)} className="hover:text-blue-500 transition-colors text-slate-400 hover:text-blue-400">{item.label}</a>
+                  <FooterLink href={item.href}>{item.label}</FooterLink>
                 </li>
               ))}
               <li>
-                <a href="/about" className="flex items-center gap-2 hover:text-blue-500 transition-colors text-slate-400 hover:text-blue-400 group">
-                   Careers <span className="text-[10px] bg-blue-600/20 text-blue-400 px-1.5 py-0.5 rounded uppercase font-black group-hover:bg-blue-600 group-hover:text-white transition-all">Hiring</span>
-                </a>
+                <FooterLink href="/about">
+                  <div className="flex items-center gap-2">
+                    Careers 
+                    <span className="text-[9px] bg-blue-600/20 text-blue-400 px-2.5 py-0.5 rounded-full font-black uppercase tracking-widest animate-pulse">Hiring</span>
+                  </div>
+                </FooterLink>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-white font-bold mb-6">Services</h4>
-            <ul className="space-y-4">
+            <h4 className="text-white text-xs font-black uppercase tracking-[0.3em] mb-10">Engineering</h4>
+            <ul className="space-y-2">
               {SERVICES.map((service) => (
                 <li key={service.id}>
-                  <a 
-                    href={`/services#${service.id}`} 
-                    className="hover:text-blue-500 transition-colors text-slate-400 hover:text-blue-400"
-                  >
+                  <FooterLink href={`/services#${service.id}`}>
                     {service.title}
-                  </a>
+                  </FooterLink>
                 </li>
               ))}
             </ul>
           </div>
 
           <div>
-            <h4 className="text-white font-bold mb-6">Newsletter</h4>
-            <p className="text-sm mb-4 text-slate-400">Subscribe to our newsletter for the latest tech news and updates.</p>
-            <form className="flex gap-2">
-              <label htmlFor="newsletter-email" className="sr-only">Email address</label>
-              <input 
-                id="newsletter-email"
-                type="email" 
-                placeholder="Email address" 
-                className="bg-slate-900 border border-slate-800 rounded-lg px-4 py-2 text-sm w-full focus:outline-none focus:border-blue-600 text-white placeholder-slate-500"
-              />
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
-                OK
+            <h4 className="text-white text-xs font-black uppercase tracking-[0.3em] mb-10">Stay Informed</h4>
+            <p className="text-sm mb-8 text-slate-400 font-medium leading-relaxed">Join our engineering collective for bi-weekly deep dives into modern tech stacks.</p>
+            <form className="space-y-4 group/form" onSubmit={(e) => e.preventDefault()}>
+              <div className="relative">
+                <input 
+                  id="newsletter-email"
+                  type="email" 
+                  placeholder="Work email address" 
+                  className="w-full bg-slate-900 border border-slate-800 rounded-2xl px-6 py-4.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 focus:pl-8 transition-all duration-500 peer"
+                />
+                {/* Border pulse effect on focus */}
+                <div className="absolute inset-0 rounded-2xl border border-blue-600 opacity-0 peer-focus:opacity-100 transition-all duration-500 pointer-events-none scale-105 peer-focus:scale-100"></div>
+              </div>
+              <button className="w-full bg-blue-600 text-white px-8 py-4.5 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] hover:bg-blue-500 transition-all duration-300 shadow-2xl shadow-blue-600/20 active:scale-95 active:shadow-none">
+                Subscribe to Insights
               </button>
             </form>
           </div>
 
         </div>
         
-        <div className="pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
-          <p>&copy; {new Date().getFullYear()} {COMPANY_NAME}. All rights reserved.</p>
-          <div className="flex gap-8">
-            <a href="#" className="hover:text-white">Privacy Policy</a>
-            <a href="#" className="hover:text-white">Terms of Service</a>
+        <div className="pt-12 border-t border-slate-900/50 flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] font-black uppercase tracking-[0.25em] text-slate-500">
+          <p>&copy; {new Date().getFullYear()} {COMPANY_NAME}. Digital Engineering Excellence.</p>
+          <div className="flex flex-wrap justify-center gap-x-12 gap-y-4">
+            <Link to="#" className="hover:text-blue-400 transition-all hover:scale-105">Privacy Policy</Link>
+            <Link to="#" className="hover:text-blue-400 transition-all hover:scale-105">Terms of Service</Link>
+            <Link to="#" className="hover:text-blue-400 transition-all hover:scale-105">Legal Compliance</Link>
           </div>
         </div>
       </div>
