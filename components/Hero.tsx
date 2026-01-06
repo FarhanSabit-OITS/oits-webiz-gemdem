@@ -38,13 +38,15 @@ export const Hero: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
   const heroRef = useRef<HTMLElement>(null);
 
-  // Smooth Parallax and Intersection Tracking
+  // Optimized Scroll Tracker for Parallax
   useEffect(() => {
     const handleScroll = () => {
+      // Use requestAnimationFrame for smooth non-blocking performance
       window.requestAnimationFrame(() => {
         setScrollY(window.scrollY);
       });
     };
+    
     window.addEventListener('scroll', handleScroll, { passive: true });
     
     const observer = new IntersectionObserver(([entry]) => {
@@ -59,8 +61,7 @@ export const Hero: React.FC = () => {
     };
   }, []);
 
-  // Sequential Typing Engine
-  // 1. Title Typing
+  // Sequential Typing Engine with Natural Jitter
   useEffect(() => {
     if (!isVisible) return;
     let titleIndex = 0;
@@ -68,16 +69,15 @@ export const Hero: React.FC = () => {
       if (titleIndex <= TITLE_TEXT.length) {
         setTypedTitle(TITLE_TEXT.slice(0, titleIndex));
         titleIndex++;
-        setTimeout(typeTitle, 60 + Math.random() * 40);
+        setTimeout(typeTitle, 50 + Math.random() * 50);
       } else {
         setIsTitleDone(true);
       }
     };
-    const timeout = setTimeout(typeTitle, 500);
+    const timeout = setTimeout(typeTitle, 400);
     return () => clearTimeout(timeout);
   }, [isVisible]);
 
-  // 2. Tagline Typing
   useEffect(() => {
     if (!isTitleDone) return;
     let taglineIndex = 0;
@@ -85,7 +85,7 @@ export const Hero: React.FC = () => {
       if (taglineIndex <= TAGLINE.length) {
         setTypedTagline(TAGLINE.slice(0, taglineIndex));
         taglineIndex++;
-        setTimeout(typeTagline, 30 + Math.random() * 30);
+        setTimeout(typeTagline, 20 + Math.random() * 30);
       } else {
         setIsTaglineDone(true);
       }
@@ -94,7 +94,6 @@ export const Hero: React.FC = () => {
     return () => clearTimeout(timeout);
   }, [isTitleDone]);
 
-  // 3. Code Snippet Typing (Natural character-by-character with syntax pauses)
   useEffect(() => {
     if (!isTaglineDone) return;
     let charIndex = 0;
@@ -104,14 +103,12 @@ export const Hero: React.FC = () => {
       if (charIndex <= CODE_SNIPPET.length) {
         setTypedCode(CODE_SNIPPET.slice(0, charIndex));
         const char = CODE_SNIPPET[charIndex - 1];
-        // Moderate base speed with subtle jitter for realism
-        let delay = 25 + Math.random() * 25; 
         
-        // Contextual logical pauses
-        if (char === '\n') delay = 500;
-        else if (char === ';') delay = 250;
-        else if (char === '{' || char === '}') delay = 400;
-        else if (char === ',') delay = 150;
+        // Logical speed variance based on syntax
+        let delay = 30 + Math.random() * 20; 
+        if (char === '\n') delay = 450;
+        else if (char === ';') delay = 200;
+        else if (char === '{' || char === '}') delay = 350;
 
         charIndex++;
         timeoutId = setTimeout(typeCode, delay);
@@ -120,7 +117,7 @@ export const Hero: React.FC = () => {
       }
     };
 
-    const initialDelay = setTimeout(typeCode, 600);
+    const initialDelay = setTimeout(typeCode, 500);
     return () => {
       clearTimeout(timeoutId);
       clearTimeout(initialDelay);
@@ -134,20 +131,26 @@ export const Hero: React.FC = () => {
       className="relative pt-32 pb-24 md:pt-48 md:pb-40 lg:pt-60 lg:pb-56 overflow-hidden min-h-[95vh] lg:min-h-screen flex items-center bg-slate-950"
     >
       {/* Subtle Parallax Background Layer */}
-      <div className="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-40 scale-110 will-change-transform"
+          className="absolute inset-0 bg-cover bg-center opacity-40 scale-125 will-change-transform"
           style={{ 
             backgroundImage: 'url("https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2070")',
-            transform: `translate3d(0, ${scrollY * 0.15}px, 0)` 
+            // Parallax factor of 0.2 provides depth without being distracting
+            transform: `translate3d(0, ${scrollY * 0.2}px, 0)` 
           }}
           aria-hidden="true"
         />
-        {/* Layered dark overlay for extreme text readability (Reduced opacity per request) */}
-        <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-[2px]" />
-        {/* Gradient vignette for depth */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-transparent to-slate-950" />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-transparent to-transparent" />
+        
+        {/* Layered dark overlay for extreme text readability */}
+        {/* Base dark tint */}
+        <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-[1px]" />
+        
+        {/* Radial gradient for focus on content */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(15,23,42,0.8)_100%)]" />
+        
+        {/* Vertical gradient for transition from header to footer sections */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-transparent to-slate-950" />
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
@@ -159,7 +162,6 @@ export const Hero: React.FC = () => {
               <span>Future-Proof Software Engineering</span>
             </div>
             
-            {/* Title with Scroll-triggered Fade & Slide */}
             <h1 className={`text-4xl sm:text-6xl md:text-8xl lg:text-7xl xl:text-9xl font-black text-white tracking-tighter leading-[1.0] min-h-[2.1em] md:min-h-[1.1em] transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               Building the <br className="hidden md:block"/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-blue-200 inline-block">
@@ -178,7 +180,6 @@ export const Hero: React.FC = () => {
                 )}
               </p>
 
-              {/* CTAs with Refined Styles and Hover Effects */}
               <div className="flex flex-col items-center lg:items-start gap-8">
                 <div className="flex flex-col sm:flex-row items-center gap-5 sm:gap-6 justify-center lg:justify-start w-full">
                   <Link to="/contact" className="w-full sm:w-auto">
@@ -217,7 +218,6 @@ export const Hero: React.FC = () => {
                 </Link>
               </div>
 
-              {/* Trusted Partners Subsection */}
               <div className={`pt-12 md:pt-16 transition-all duration-1000 delay-500 border-t border-white/10 max-w-2xl mx-auto lg:mx-0 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
                 <p className="text-center lg:text-left text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] mb-10">
                   Trusted by Global Innovators
@@ -242,11 +242,9 @@ export const Hero: React.FC = () => {
             </div>
           </div>
 
-          {/* Terminal Animation Visual */}
           <div className={`flex-1 w-full max-w-2xl transition-all duration-1000 delay-300 transform ${isVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-12 scale-95'}`}>
             <div className="relative group/visual">
               
-              {/* Terminal with blinking cursor */}
               <div className="absolute -top-12 -left-8 w-full max-w-[320px] sm:max-w-sm z-20 hidden lg:block animate-float">
                 <div className="bg-slate-950/95 backdrop-blur-2xl rounded-[2.5rem] border border-white/10 shadow-2xl overflow-hidden ring-1 ring-white/10">
                   <div className="flex items-center justify-between px-6 py-4 bg-slate-900/50 border-b border-white/5">
@@ -261,7 +259,6 @@ export const Hero: React.FC = () => {
                   </div>
                   <div className="p-8 font-mono text-[11px] lg:text-[12px] leading-relaxed text-blue-300/90 h-80 overflow-hidden whitespace-pre-wrap relative bg-gradient-to-b from-transparent to-slate-950/20">
                     {typedCode}
-                    {/* Persistent Blinking Cursor */}
                     {(isTaglineDone || !isCodeDone) && (
                       <span className="inline-block w-2.5 h-4 bg-blue-500 align-middle ml-1 animate-pulse shadow-[0_0_15px_rgba(59,130,246,0.8)]" />
                     )}
@@ -269,7 +266,6 @@ export const Hero: React.FC = () => {
                 </div>
               </div>
               
-              {/* Image Frame with Overlay */}
               <div className="relative bg-slate-900 border border-white/10 rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden aspect-[4/3] group/img ring-1 ring-white/5 transition-all duration-700">
                 <img 
                   src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=1200" 
@@ -283,7 +279,6 @@ export const Hero: React.FC = () => {
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-blue-600/10 rounded-full blur-[80px] pointer-events-none" />
               </div>
 
-              {/* Decorative Glow */}
               <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-blue-500/10 rounded-full blur-[120px] -z-10 group-hover/visual:scale-125 transition-transform duration-1000" />
             </div>
           </div>
