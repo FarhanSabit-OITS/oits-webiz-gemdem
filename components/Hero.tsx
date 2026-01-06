@@ -143,7 +143,7 @@ export const Hero: React.FC = () => {
           }}
           aria-hidden="true"
         />
-        {/* Layered dark overlay for extreme text readability */}
+        {/* Layered dark overlay for extreme text readability (Reduced opacity per request) */}
         <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-[2px]" />
         {/* Gradient vignette for depth */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-transparent to-slate-950" />
@@ -197,7 +197,7 @@ export const Hero: React.FC = () => {
                     <Button 
                       variant="secondary" 
                       size="lg" 
-                      className="group transition-all duration-500 hover:scale-[1.05] hover:-translate-y-1.5 bg-white/10 backdrop-blur-md text-white border border-white/20 active:scale-95 w-full rounded-2xl flex items-center justify-center gap-2 px-12 md:px-14 hover:bg-white/20 hover:shadow-[0_20px_50px_rgba(255,255,255,0.15)] ring-1 ring-white/10 hover:ring-white/40 shadow-xl font-black"
+                      className="group transition-all duration-500 hover:scale-[1.05] hover:-translate-y-1.5 bg-white/10 backdrop-blur-md text-white border border-white/20 active:scale-95 w-full rounded-2xl flex items-center justify-center gap-2 px-12 md:px-14 hover:bg-white/20 hover:text-blue-200 hover:shadow-[0_20px_50px_rgba(255,255,255,0.15)] ring-1 ring-white/10 hover:ring-white/40 shadow-xl font-black"
                     >
                       <PlayCircle size={20} className="transition-transform group-hover:scale-110" />
                       Request a Demo
@@ -226,7 +226,7 @@ export const Hero: React.FC = () => {
                   {TRUSTED_BY.map((partner, idx) => (
                     <div 
                       key={partner.name} 
-                      className={`flex items-center gap-3 group cursor-default transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                      className={`flex items-center gap-3 group cursor-default transition-all duration-700 transform ${isVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-8'}`}
                       style={{ transitionDelay: `${700 + idx * 100}ms` }}
                     >
                       <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl ${partner.color} flex items-center justify-center text-[10px] sm:text-xs font-black transition-all duration-500 group-hover:scale-115 group-hover:brightness-125 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] shadow-sm`}>

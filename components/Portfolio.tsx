@@ -94,24 +94,10 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
     };
   }, []);
 
-  useEffect(() => {
-    const video = videoRef.current;
-    if (video && video.textTracks && video.textTracks.length > 0) {
-      video.textTracks[0].mode = captionsEnabled ? 'showing' : 'hidden';
-    }
-  }, [captionsEnabled]);
-
   const togglePlay = () => {
     if (videoRef.current) {
       if (isPlaying) videoRef.current.pause();
       else videoRef.current.play();
-    }
-  };
-
-  const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
     }
   };
 
@@ -123,53 +109,10 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
     }
   };
 
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = parseFloat(e.target.value);
-    setVolume(val);
-    if (videoRef.current) {
-      videoRef.current.volume = val;
-      if (val === 0) setIsMuted(true);
-      else if (isMuted) { videoRef.current.muted = false; setIsMuted(false); }
-    }
-  };
-
-  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const time = parseFloat(e.target.value);
-    if (videoRef.current) videoRef.current.currentTime = time;
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    switch (e.key.toLowerCase()) {
-      case ' ':
-        e.preventDefault();
-        togglePlay();
-        break;
-      case 'm':
-        e.preventDefault();
-        toggleMute();
-        break;
-      case 'f':
-        e.preventDefault();
-        toggleFullscreen();
-        break;
-      case 'c':
-        e.preventDefault();
-        setCaptionsEnabled(!captionsEnabled);
-        break;
-      case 'escape':
-        if (!document.fullscreenElement) onClose();
-        break;
-    }
-  };
-
   return (
     <div 
       ref={containerRef}
       className="relative w-full h-full bg-black flex flex-col justify-center group overflow-hidden outline-none"
-      onKeyDown={handleKeyDown}
-      tabIndex={0}
-      role="region"
-      aria-label="High performance video player"
       onMouseMove={() => {
         setShowControls(true);
         window.clearTimeout((window as any)._controlsTimeout);
@@ -194,110 +137,28 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
           crossOrigin="anonymous"
           aria-hidden="true"
         >
-          {captionsUrl && <track kind="captions" src={captionsUrl} srcLang="en" label="English" default={captionsEnabled} />}
+          {captionsUrl && <track kind="captions" src={captionsUrl} srcLang="en" label="English" default={true} />}
         </video>
       )}
 
       <div 
         className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent px-6 pb-6 pt-16 transition-all duration-500 z-10 ${showControls || !isPlaying ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0 pointer-events-none'}`}
-        role="group" 
-        aria-label="Video controls"
       >
-        <div className="relative group/progress mb-6">
-          <div className="relative h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
-            <div 
-              className="absolute top-0 left-0 h-full bg-white/20 transition-all duration-300"
-              style={{ width: `${(buffered / (duration || 1)) * 100}%` }}
-            />
-            <div 
-              className="absolute top-0 left-0 h-full bg-blue-600 transition-all duration-100"
-              style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
-            />
-          </div>
-          <input 
-            type="range" 
-            min="0" 
-            max={duration || 0} 
-            step="0.1"
-            value={currentTime} 
-            onChange={handleSeek} 
-            className="absolute top-1/2 -translate-y-1/2 left-0 w-full h-4 bg-transparent appearance-none cursor-pointer accent-blue-500 hover:accent-blue-400 opacity-0 group-hover/progress:opacity-100 transition-opacity z-20" 
-            aria-label="Seek video position" 
-            aria-valuemin={0}
-            aria-valuemax={duration || 0}
-            aria-valuenow={currentTime}
-            aria-valuetext={formatTime(currentTime)}
-          />
-        </div>
-
         <div className="flex items-center justify-between text-white">
           <div className="flex items-center gap-6">
-            <button 
-              onClick={togglePlay} 
-              className="p-2 hover:bg-white/20 rounded-full transition-all active:scale-90 hover:scale-110" 
-              aria-label={isPlaying ? "Pause video" : "Play video"}
-              aria-pressed={isPlaying}
-            >
+            <button onClick={togglePlay} className="p-2 hover:bg-white/20 rounded-full transition-all active:scale-90 hover:scale-110">
               {isPlaying ? <Pause size={28} fill="currentColor" /> : <Play size={28} fill="currentColor" className="translate-x-0.5" />}
             </button>
-            
-            <div className="flex items-center gap-4 group/vol">
-              <button 
-                onClick={toggleMute} 
-                className="p-1.5 hover:bg-white/20 rounded-lg transition-all hover:scale-110 active:scale-90" 
-                aria-label={isMuted ? "Unmute video" : "Mute video"}
-                aria-pressed={isMuted}
-              >
-                {isMuted || volume === 0 ? <VolumeX size={20} /> : <Volume2 size={20} />}
-              </button>
-              <input 
-                type="range" 
-                min="0" 
-                max="1" 
-                step="0.05" 
-                value={isMuted ? 0 : volume} 
-                onChange={handleVolumeChange} 
-                className="w-0 overflow-hidden group-hover/vol:w-24 h-1 bg-white/30 rounded appearance-none accent-white cursor-pointer transition-all duration-300" 
-                aria-label="Adjust volume" 
-                aria-valuemin={0}
-                aria-valuemax={1}
-                aria-valuenow={isMuted ? 0 : volume}
-              />
-            </div>
-            
             <span className="text-sm font-mono tracking-tight text-slate-300">
               {formatTime(currentTime)} <span className="text-white/40">/</span> {formatTime(duration)}
             </span>
           </div>
-
           <div className="flex items-center gap-4">
-            {captionsUrl && (
-              <button 
-                onClick={() => setCaptionsEnabled(!captionsEnabled)} 
-                className={`p-2.5 rounded-xl transition-all hover:scale-110 active:scale-90 ${captionsEnabled ? 'text-blue-400 bg-blue-500/10' : 'text-white/60 hover:text-white'}`} 
-                aria-label="Toggle closed captions" 
-                aria-pressed={captionsEnabled}
-              >
-                <Subtitles size={22} />
-              </button>
-            )}
-            
-            <button 
-              onClick={toggleFullscreen} 
-              className="p-2.5 rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-all hover:scale-110 active:scale-90"
-              aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"}
-            >
+            <button onClick={toggleFullscreen} className="p-2.5 rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-all hover:scale-110 active:scale-90">
               {isFullscreen ? <Minimize size={22} /> : <Maximize size={22} />}
             </button>
-
-            <div className="w-px h-6 bg-white/20 mx-2" />
-
-            <button 
-              onClick={onClose} 
-              className="text-[10px] font-black uppercase tracking-widest px-5 py-2.5 bg-white/10 rounded-xl hover:bg-white/20 transition-all border border-white/20 active:scale-95"
-              aria-label="Exit video player"
-            >
-              Exit Player
+            <button onClick={onClose} className="text-[10px] font-black uppercase tracking-widest px-5 py-2.5 bg-white/10 rounded-xl hover:bg-white/20 transition-all border border-white/20 active:scale-95">
+              Exit
             </button>
           </div>
         </div>
@@ -308,7 +169,6 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
 
 const ProjectCard = ({ project, onClick, onViewDemo, highlightedTags, index }: any) => {
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -327,54 +187,37 @@ const ProjectCard = ({ project, onClick, onViewDemo, highlightedTags, index }: a
       style={{ transitionDelay: `${index * 80}ms` }}
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-slate-200 dark:bg-slate-800 cursor-pointer" onClick={onClick}>
-        {!imageError ? (
-          <img 
-            src={project.imageUrl || FALLBACK_IMAGE} 
-            alt={project.title} 
-            loading="lazy"
-            onLoad={() => setImageLoaded(true)} 
-            onError={() => setImageError(true)}
-            className={`w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`} 
-          />
-        ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-400 gap-4">
-             <ImageIcon size={48} strokeWidth={1} />
-             <span className="text-[10px] font-bold uppercase tracking-widest">Image Unavailable</span>
-          </div>
-        )}
-        
+        <img 
+          src={project.imageUrl || FALLBACK_IMAGE} 
+          alt={project.title} 
+          loading="lazy"
+          onLoad={() => setImageLoaded(true)} 
+          className={`w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`} 
+        />
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col gap-4 items-center justify-center bg-slate-900/60 backdrop-blur-sm z-10">
-          <button 
-            className="bg-white text-slate-900 px-8 py-3 rounded-full font-bold text-xs shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 hover:bg-blue-600 hover:text-white active:scale-95" 
-            onClick={(e) => { e.stopPropagation(); onClick(); }}
-          >
-            Explore Case Study
+          <button className="bg-white text-slate-900 px-8 py-3 rounded-full font-bold text-xs shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 hover:bg-blue-600 hover:text-white active:scale-95" onClick={(e) => { e.stopPropagation(); onClick(); }}>
+            Case Study
           </button>
           {project.demoVideoUrl && (
-            <button 
-              className="bg-blue-600 text-white px-8 py-3 rounded-full font-bold text-xs shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-75 hover:bg-blue-700 hover:scale-105 hover:shadow-blue-500/50 flex items-center gap-2 active:scale-95" 
-              onClick={(e) => { e.stopPropagation(); onViewDemo(); }}
-            >
-              <MonitorPlay size={18} /> View Demo
+            <button className="bg-blue-600 text-white px-8 py-3 rounded-full font-bold text-xs shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-75 hover:bg-blue-700 hover:scale-105 flex items-center gap-2 active:scale-95" onClick={(e) => { e.stopPropagation(); onViewDemo(); }}>
+              <MonitorPlay size={18} /> Demo
             </button>
           )}
         </div>
       </div>
       <div className="p-8">
         <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-blue-600 transition-colors leading-tight">{project.title}</h4>
-        <div className="bg-slate-50 dark:bg-slate-800/40 p-5 rounded-2xl mb-6 border border-slate-100 dark:border-slate-700/50 min-h-[100px] flex items-center">
-           <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed font-medium italic">
-             {project.fullDescription || project.description}
-           </p>
-        </div>
+        <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6 line-clamp-2">
+          {project.description}
+        </p>
         <div className="flex flex-wrap gap-2">
           {project.technologies?.map((tech: string) => (
             <span 
               key={tech} 
-              className={`text-[11px] px-3 py-1 rounded-lg border transition-all duration-300 font-bold tracking-tight shadow-sm ${
+              className={`text-[11px] px-3 py-1 rounded-lg border transition-all duration-300 font-bold tracking-tight ${
                 highlightedTags.includes(tech) 
-                  ? 'bg-blue-600 border-blue-600 text-white scale-110 shadow-blue-500/20 ring-2 ring-blue-500/10' 
-                  : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 hover:border-blue-400 dark:hover:border-blue-500'
+                  ? 'bg-blue-600 border-blue-600 text-white scale-110 shadow-lg shadow-blue-500/20' 
+                  : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 hover:border-blue-400'
               }`}
             >
               {tech}
@@ -393,18 +236,16 @@ interface PortfolioProps {
 export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>(() => {
     try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY_CATEGORIES) || '[]');
-    } catch {
-      return [];
-    }
+      const stored = localStorage.getItem(STORAGE_KEY_CATEGORIES);
+      return stored ? JSON.parse(stored) : [];
+    } catch { return []; }
   });
   
   const [selectedTags, setSelectedTags] = useState<string[]>(() => {
     try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY_TAGS) || '[]');
-    } catch {
-      return [];
-    }
+      const stored = localStorage.getItem(STORAGE_KEY_TAGS);
+      return stored ? JSON.parse(stored) : [];
+    } catch { return []; }
   });
 
   const [loading, setLoading] = useState(true);
@@ -456,14 +297,6 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
     return limit ? projs.slice(0, limit) : projs;
   }, [selectedCategories, selectedTags, limit]);
 
-  const filterStatus = useMemo(() => {
-    if (selectedCategories.length === 0 && selectedTags.length === 0) return "All Projects";
-    const parts = [];
-    if (selectedCategories.length > 0) parts.push(`${selectedCategories.length} Categories`);
-    if (selectedTags.length > 0) parts.push(`${selectedTags.length} Technologies`);
-    return parts.join(' • ');
-  }, [selectedCategories, selectedTags]);
-
   const toggleCategory = (cat: string) => {
     if (cat === ALL_CATEGORY) setSelectedCategories([]);
     else setSelectedCategories(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]);
@@ -479,7 +312,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
   const shareProject = (platform: 'linkedin' | 'twitter') => {
     if (!modalState) return;
     const url = window.location.href;
-    const text = `Check out this amazing project by OITS Dhaka: ${modalState.project.title}`;
+    const text = `Check out this project by OITS Dhaka: ${modalState.project.title}`;
     const links = {
       linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
       twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`
@@ -491,12 +324,11 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
     <section id="portfolio" className="py-24 bg-slate-50 dark:bg-slate-950 min-h-screen transition-colors duration-300">
       <div className="container mx-auto px-6">
         
-        {/* Dynamic Filter Status Bar */}
         {!limit && (
-          <div className="flex items-center gap-4 text-xs font-black text-slate-400 uppercase tracking-[0.3em] border-b border-slate-200 dark:border-slate-800 pb-6 mb-12 animate-fade-in">
+          <div className="flex items-center gap-4 text-xs font-black text-slate-400 uppercase tracking-[0.3em] border-b border-slate-200 dark:border-slate-800 pb-6 mb-12">
              <Layers size={14} className="text-blue-600" />
-             <span>Active Filters: <span className="text-slate-900 dark:text-blue-400">{filterStatus}</span></span>
-             <span className="ml-auto text-[10px] text-slate-400">Showing {filteredProjects.length} of {PROJECTS.length}</span>
+             <span>Active Filters</span>
+             <span className="ml-auto text-[10px] text-slate-400">Total: {filteredProjects.length}</span>
           </div>
         )}
 
@@ -513,8 +345,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
                         key={cat} 
                         onClick={() => toggleCategory(cat)} 
                         aria-pressed={active} 
-                        aria-label={`Filter by ${cat}. ${count} projects available.`}
-                        className={`flex items-center justify-between px-5 py-3 rounded-2xl text-sm font-bold text-left whitespace-nowrap transition-all border outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30 active:scale-[0.97] ${active ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-xl border-transparent translate-x-1' : 'bg-white dark:bg-slate-900 text-slate-600 border-slate-200 dark:border-slate-800 hover:border-blue-300'}`}
+                        className={`flex items-center justify-between px-5 py-3 rounded-2xl text-sm font-bold text-left transition-all border outline-none active:scale-[0.97] hover:scale-105 ${active ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-xl border-transparent' : 'bg-white dark:bg-slate-900 text-slate-600 border-slate-200 dark:border-slate-800 hover:border-blue-300'}`}
                       >
                         <span className="flex items-center gap-2">
                            {cat}
@@ -531,20 +362,16 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
            )}
            <div className="flex-1">
               {!limit && (
-                <div className="bg-white dark:bg-slate-900 p-10 rounded-3xl border border-slate-200 dark:border-slate-800 mb-12 shadow-sm relative overflow-hidden group/filter">
+                <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 mb-12 shadow-sm relative overflow-hidden group/filter">
                   <div className="flex items-center justify-between mb-8">
                     <div className="flex items-center gap-3">
                       <div className="p-2.5 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-blue-600 dark:text-blue-400">
                         <Tag size={20}/>
                       </div>
-                      <span className="font-black text-xl tracking-tight text-slate-900 dark:text-white">Technology Filters</span>
+                      <span className="font-black text-lg tracking-tight text-slate-900 dark:text-white">Technologies</span>
                     </div>
                     {(selectedTags.length > 0 || selectedCategories.length > 0) && (
-                      <button 
-                        onClick={handleResetFilters} 
-                        aria-label="Reset all selected filters"
-                        className="text-xs text-blue-600 dark:text-blue-400 flex items-center gap-2 font-black uppercase tracking-widest hover:underline px-4 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-full transition-all hover:scale-105 active:scale-95"
-                      >
+                      <button onClick={handleResetFilters} className="text-xs text-blue-600 dark:text-blue-400 flex items-center gap-2 font-black uppercase tracking-widest hover:underline px-4 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-full transition-all">
                         <RotateCcw size={14}/> Reset
                       </button>
                     )}
@@ -558,8 +385,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
                           key={tag} 
                           onClick={() => toggleTag(tag)} 
                           aria-pressed={active} 
-                          aria-label={`Filter technology: ${tag}. ${count} matching projects.`}
-                          className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-black border transition-all active:scale-90 outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30 ${active ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/30 scale-105' : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 hover:border-blue-400'}`}
+                          className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black border transition-all active:scale-90 outline-none hover:scale-105 ${active ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/30 scale-105' : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 hover:border-blue-400'}`}
                         >
                           {tag}
                           <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${active ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-400'}`}>
@@ -574,7 +400,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
               
               <div 
                 key={selectedCategories.join('-') + selectedTags.join('-')}
-                className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 min-h-[500px] animate-in fade-in zoom-in-95 slide-in-from-bottom-4 duration-700"
+                className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 min-h-[500px] animate-in fade-in zoom-in-95 duration-700"
               >
                 {loading ? [1,2,3].map(i => <ProjectSkeleton key={i}/>) : filteredProjects.map((p, i) => (
                   <ProjectCard 
@@ -591,15 +417,15 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
                       <div className="w-24 h-24 bg-slate-50 dark:bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
                         <FilterX className="text-slate-300 dark:text-slate-600" size={40} />
                       </div>
-                      <h5 className="text-2xl font-black text-slate-900 dark:text-white mb-4">No Matching Projects</h5>
+                      <h5 className="text-2xl font-black text-slate-900 dark:text-white mb-4">No projects found matching your criteria</h5>
                       <p className="text-slate-500 dark:text-slate-400 max-w-sm mx-auto mb-10 leading-relaxed font-medium">
-                        We couldn't find any projects matching your current combination of filters. Try broadening your search.
+                        Try adjusting your filters or search terms to find what you're looking for.
                       </p>
                       <button 
                         onClick={handleResetFilters} 
                         className="inline-flex items-center gap-3 px-10 py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-blue-500/20 transition-all hover:bg-blue-700 hover:scale-105 active:scale-95"
                       >
-                        <RotateCcw size={16}/> Clear All Filters
+                        <RotateCcw size={16}/> Reset Filters
                       </button>
                    </div>
                 )}
@@ -615,36 +441,20 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
               {modalState.autoPlay && modalState.project.demoVideoUrl ? (
                 <CustomVideoPlayer 
                   src={modalState.project.demoVideoUrl} 
-                  captionsUrl={modalState.project.captionsUrl} 
                   poster={modalState.project.imageUrl} 
                   onClose={() => setModalState({ ...modalState, autoPlay: false })} 
                 />
               ) : (
                 <div className="relative w-full h-full group/modal-img">
-                  <img 
-                    src={modalState.project.imageUrl || FALLBACK_IMAGE} 
-                    alt={modalState.project.title} 
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = FALLBACK_IMAGE;
-                    }}
-                  />
-                  <button 
-                    onClick={() => setModalState(null)} 
-                    className="absolute top-6 right-6 p-3 bg-black/50 backdrop-blur-md rounded-full text-white hover:bg-black/70 transition-all active:scale-90 z-20"
-                    aria-label="Close Case Study"
-                  >
+                  <img src={modalState.project.imageUrl || FALLBACK_IMAGE} alt={modalState.project.title} className="w-full h-full object-cover"/>
+                  <button onClick={() => setModalState(null)} className="absolute top-6 right-6 p-3 bg-black/50 backdrop-blur-md rounded-full text-white hover:bg-black/70 transition-all active:scale-90 z-20">
                     <X size={24}/>
                   </button>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-10 md:p-16">
                     <h3 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter">{modalState.project.title}</h3>
                     <div className="flex gap-4">
                       {modalState.project.demoVideoUrl && (
-                        <Button 
-                          onClick={() => setModalState({ ...modalState, autoPlay: true })} 
-                          variant="primary" 
-                          className="rounded-full shadow-2xl shadow-blue-500/40"
-                        >
+                        <Button onClick={() => setModalState({ ...modalState, autoPlay: true })} variant="primary" className="rounded-full shadow-2xl shadow-blue-500/40">
                           <Play size={18} className="mr-2" /> Play Showreel
                         </Button>
                       )}
@@ -655,31 +465,20 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
             </div>
             <div className="p-10 md:p-16 overflow-y-auto">
               <div className="max-w-4xl">
-                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
-                    <h4 className="text-sm font-black text-blue-600 dark:text-blue-400 uppercase tracking-[0.3em] flex items-center gap-2">
-                      <Info size={16} /> Detailed Case Study
-                    </h4>
+                 <div className="flex items-center justify-between mb-10">
+                    <h4 className="text-sm font-black text-blue-600 uppercase tracking-[0.3em]">Case Study Overview</h4>
                     <div className="flex items-center gap-4">
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Share Project:</span>
-                      <button onClick={() => shareProject('linkedin')} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-blue-600 hover:text-white transition-all shadow-sm" aria-label="Share on LinkedIn">
+                      <button onClick={() => shareProject('linkedin')} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-blue-600 hover:text-white transition-all shadow-sm">
                         <Linkedin size={18} />
                       </button>
-                      <button onClick={() => shareProject('twitter')} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-blue-400 hover:text-white transition-all shadow-sm" aria-label="Share on Twitter">
+                      <button onClick={() => shareProject('twitter')} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-blue-400 hover:text-white transition-all shadow-sm">
                         <Twitter size={18} />
                       </button>
                     </div>
                  </div>
-
                  <p className="text-slate-700 dark:text-slate-300 text-xl leading-relaxed mb-10 font-medium">
                    {modalState.project.fullDescription || modalState.project.description}
                  </p>
-                 <div className="flex flex-wrap gap-3">
-                    {modalState.project.technologies?.map(tech => (
-                      <span key={tech} className="px-5 py-2 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-200 border border-slate-100 dark:border-slate-700">
-                        {tech}
-                      </span>
-                    ))}
-                 </div>
               </div>
             </div>
           </div>
