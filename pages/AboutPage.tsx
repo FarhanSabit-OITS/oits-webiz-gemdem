@@ -24,7 +24,7 @@ const FAQS = [
   },
   {
     question: "Can you help with post-launch support and scaling?",
-    answer: "Absolutely. We offer flexible post-launch maintenance packages that include monitoring, bug fixes, performance tuning, and continuous feature development to help you scale based on user feedback."
+    answer: "Absolutely. We offer flexible post-launch maintenance packages that include monitoring, bug fixes, performance tuning, and continuous feature development to help you scale based on real user feedback."
   },
   {
     question: "Do you offer dedicated developer teams?",
@@ -43,18 +43,18 @@ const AccordionItem: React.FC<{ question: string; answer: string }> = ({ questio
     <div className="border-b border-slate-100 dark:border-slate-800 last:border-0 overflow-hidden">
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between py-6 text-left group transition-all"
+        className="w-full flex items-center justify-between py-7 text-left group transition-all outline-none focus-visible:bg-slate-50 dark:focus-visible:bg-slate-800/50"
         aria-expanded={isOpen}
       >
-        <span className="text-lg md:text-xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors">
+        <span className="text-lg md:text-xl font-black text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors tracking-tight">
           {question}
         </span>
-        <div className={`shrink-0 ml-4 p-2 bg-slate-50 dark:bg-slate-800 rounded-full transition-transform duration-300 ${isOpen ? 'rotate-180 bg-blue-600 text-white' : ''}`}>
+        <div className={`shrink-0 ml-4 p-2 bg-slate-50 dark:bg-slate-800 rounded-full transition-all duration-300 ${isOpen ? 'rotate-180 bg-blue-600 text-white shadow-lg' : 'text-slate-400'}`}>
           <ChevronDown size={20} />
         </div>
       </button>
-      <div className={`transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 pb-8' : 'max-h-0'}`}>
-        <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-lg">
+      <div className={`transition-all duration-500 ease-in-out overflow-hidden ${isOpen ? 'max-h-[500px] opacity-100 pb-8' : 'max-h-0 opacity-0'}`}>
+        <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-lg font-medium">
           {answer}
         </p>
       </div>
@@ -142,10 +142,10 @@ const AboutPage: React.FC = () => {
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-6">
                 <HelpCircle size={14} /> Common Questions
               </div>
-              <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight">Everything you need <br/> to know.</h2>
+              <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">Everything you need <br/> to know.</h2>
             </div>
             
-            <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-8 md:p-12 border border-slate-100 dark:border-slate-800 shadow-2xl shadow-blue-500/5">
+            <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-8 md:p-14 border border-slate-100 dark:border-slate-800 shadow-2xl shadow-blue-500/5">
               {FAQS.map((faq, idx) => (
                 <AccordionItem key={idx} question={faq.question} answer={faq.answer} />
               ))}
@@ -160,7 +160,7 @@ const AboutPage: React.FC = () => {
           <p className="text-center text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] mb-12">Our Ecosystem Partners</p>
           <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-30 grayscale transition-all hover:grayscale-0">
             {LOGOS.map((logo) => (
-              <span key={logo.name} className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">{logo.name}</span>
+              <span key={logo.name} className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter transition-all hover:scale-110 cursor-default">{logo.name}</span>
             ))}
           </div>
         </div>
@@ -180,7 +180,7 @@ const AboutPage: React.FC = () => {
                    ].map((val) => (
                      <div key={val.title} className="group">
                         <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-blue-600 transition-colors">{val.title}</h4>
-                        <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{val.desc}</p>
+                        <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-medium">{val.desc}</p>
                      </div>
                    ))}
                 </div>
@@ -197,12 +197,12 @@ const AboutPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Work With Us Section - Solid contrast with text-slate-950 for visibility in light mode */}
+      {/* Work With Us Section */}
       <section className="py-24 bg-slate-900 dark:bg-slate-800 text-white">
         <div className="container mx-auto px-6 text-center">
-           <h3 className="text-3xl md:text-5xl font-black mb-10 tracking-tight">Want to join our mission?</h3>
+           <h3 className="text-3xl md:text-5xl font-black mb-10 tracking-tight leading-tight">Want to join our mission?</h3>
            <Link to="/contact">
-             <Button size="lg" className="bg-white text-slate-950 hover:bg-slate-100 border-none transition-all shadow-2xl px-16 group active:scale-95">
+             <Button size="lg" className="bg-white text-slate-950 hover:bg-slate-100 border-none transition-all shadow-2xl px-16 group active:scale-95 rounded-2xl">
                <span className="font-black">Work With Us</span>
              </Button>
            </Link>

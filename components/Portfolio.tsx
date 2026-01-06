@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { X, Tag, MonitorPlay, RotateCcw, Check, Play, Pause, Volume2, VolumeX, Info, Subtitles, Linkedin, Twitter, Share2, ImageIcon, Maximize, Minimize, AlertTriangle, Layers } from 'lucide-react';
+import { X, Tag, MonitorPlay, RotateCcw, Check, Play, Pause, Volume2, VolumeX, Info, Subtitles, Linkedin, Twitter, Share2, ImageIcon, Maximize, Minimize, AlertTriangle, Layers, FilterX } from 'lucide-react';
 import { PROJECTS } from '../constants';
 import { Project } from '../types';
 import { Button } from './ui/Button';
@@ -471,6 +471,11 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
 
   const toggleTag = (tag: string) => setSelectedTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
 
+  const handleResetFilters = () => {
+    setSelectedCategories([]);
+    setSelectedTags([]);
+  };
+
   const shareProject = (platform: 'linkedin' | 'twitter') => {
     if (!modalState) return;
     const url = window.location.href;
@@ -499,7 +504,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
            {!limit && (
              <aside className="w-full lg:w-80 space-y-8">
                 <h4 className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] mb-6">Verticals</h4>
-                <nav className="flex lg:flex-col gap-3 overflow-x-auto no-scrollbar pb-2" role="group" aria-label="Vertical Filter">
+                <nav className="flex lg:flex-col gap-3 overflow-x-auto no-scrollbar pb-2" role="group" aria-label="Vertical Filter Navigation">
                   {categories.map(cat => {
                     const active = cat === ALL_CATEGORY ? selectedCategories.length === 0 : selectedCategories.includes(cat);
                     const count = cat === ALL_CATEGORY ? PROJECTS.length : (dynamicCategoryCounts[cat] || 0);
@@ -508,7 +513,8 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
                         key={cat} 
                         onClick={() => toggleCategory(cat)} 
                         aria-pressed={active} 
-                        className={`flex items-center justify-between px-5 py-3 rounded-2xl text-sm font-bold text-left whitespace-nowrap transition-all border outline-none focus-visible:ring-4 focus-visible:ring-blue-500/20 active:scale-[0.97] ${active ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-xl border-transparent translate-x-1' : 'bg-white dark:bg-slate-900 text-slate-600 border-slate-200 dark:border-slate-800 hover:border-blue-300'}`}
+                        aria-label={`Filter by ${cat}. ${count} projects available.`}
+                        className={`flex items-center justify-between px-5 py-3 rounded-2xl text-sm font-bold text-left whitespace-nowrap transition-all border outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30 active:scale-[0.97] ${active ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-xl border-transparent translate-x-1' : 'bg-white dark:bg-slate-900 text-slate-600 border-slate-200 dark:border-slate-800 hover:border-blue-300'}`}
                       >
                         <span className="flex items-center gap-2">
                            {cat}
@@ -535,14 +541,15 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
                     </div>
                     {(selectedTags.length > 0 || selectedCategories.length > 0) && (
                       <button 
-                        onClick={() => { setSelectedCategories([]); setSelectedTags([]); }} 
-                        className="text-xs text-blue-600 dark:text-blue-400 flex items-center gap-2 font-black uppercase tracking-widest hover:underline px-4 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-full transition-all"
+                        onClick={handleResetFilters} 
+                        aria-label="Reset all selected filters"
+                        className="text-xs text-blue-600 dark:text-blue-400 flex items-center gap-2 font-black uppercase tracking-widest hover:underline px-4 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-full transition-all hover:scale-105 active:scale-95"
                       >
                         <RotateCcw size={14}/> Reset
                       </button>
                     )}
                   </div>
-                  <div className="flex flex-wrap gap-3" role="group" aria-label="Tech Stack Filter">
+                  <div className="flex flex-wrap gap-3" role="group" aria-label="Technology Filter Chips">
                     {allTags.map(tag => {
                       const active = selectedTags.includes(tag);
                       const count = dynamicTagCounts[tag] || 0;
@@ -551,7 +558,8 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
                           key={tag} 
                           onClick={() => toggleTag(tag)} 
                           aria-pressed={active} 
-                          className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-black border transition-all active:scale-90 outline-none focus-visible:ring-4 focus-visible:ring-blue-500/20 ${active ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/30 scale-105' : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 hover:border-blue-400'}`}
+                          aria-label={`Filter technology: ${tag}. ${count} matching projects.`}
+                          className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-black border transition-all active:scale-90 outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30 ${active ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/30 scale-105' : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 hover:border-blue-400'}`}
                         >
                           {tag}
                           <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${active ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-400'}`}>
@@ -566,7 +574,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
               
               <div 
                 key={selectedCategories.join('-') + selectedTags.join('-')}
-                className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 min-h-[500px] animate-in fade-in slide-in-from-bottom-4 duration-700"
+                className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 min-h-[500px] animate-in fade-in zoom-in-95 slide-in-from-bottom-4 duration-700"
               >
                 {loading ? [1,2,3].map(i => <ProjectSkeleton key={i}/>) : filteredProjects.map((p, i) => (
                   <ProjectCard 
@@ -579,12 +587,20 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
                   />
                 ))}
                 {!loading && filteredProjects.length === 0 && (
-                   <div className="col-span-full py-32 text-center bg-white dark:bg-slate-900 rounded-[3rem] border border-dashed border-slate-200 dark:border-slate-800 animate-in zoom-in-95 duration-500">
-                      <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <X className="text-slate-300" size={32} />
+                   <div className="col-span-full py-40 text-center bg-white dark:bg-slate-900 rounded-[3rem] border-2 border-dashed border-slate-200 dark:border-slate-800 animate-in zoom-in-95 duration-500">
+                      <div className="w-24 h-24 bg-slate-50 dark:bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
+                        <FilterX className="text-slate-300 dark:text-slate-600" size={40} />
                       </div>
-                      <p className="text-xl font-bold text-slate-400">No projects match the selected filters.</p>
-                      <button onClick={() => {setSelectedCategories([]); setSelectedTags([]);}} className="mt-4 text-blue-600 font-black uppercase text-xs tracking-widest hover:underline">Clear all filters</button>
+                      <h5 className="text-2xl font-black text-slate-900 dark:text-white mb-4">No Matching Projects</h5>
+                      <p className="text-slate-500 dark:text-slate-400 max-w-sm mx-auto mb-10 leading-relaxed font-medium">
+                        We couldn't find any projects matching your current combination of filters. Try broadening your search.
+                      </p>
+                      <button 
+                        onClick={handleResetFilters} 
+                        className="inline-flex items-center gap-3 px-10 py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-blue-500/20 transition-all hover:bg-blue-700 hover:scale-105 active:scale-95"
+                      >
+                        <RotateCcw size={16}/> Clear All Filters
+                      </button>
                    </div>
                 )}
               </div>
@@ -645,10 +661,10 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
                     </h4>
                     <div className="flex items-center gap-4">
                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Share Project:</span>
-                      <button onClick={() => shareProject('linkedin')} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-blue-600 hover:text-white transition-all shadow-sm">
+                      <button onClick={() => shareProject('linkedin')} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-blue-600 hover:text-white transition-all shadow-sm" aria-label="Share on LinkedIn">
                         <Linkedin size={18} />
                       </button>
-                      <button onClick={() => shareProject('twitter')} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-blue-400 hover:text-white transition-all shadow-sm">
+                      <button onClick={() => shareProject('twitter')} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-blue-400 hover:text-white transition-all shadow-sm" aria-label="Share on Twitter">
                         <Twitter size={18} />
                       </button>
                     </div>
