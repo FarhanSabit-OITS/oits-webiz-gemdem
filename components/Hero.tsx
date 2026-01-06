@@ -38,7 +38,7 @@ export const Hero: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
   const heroRef = useRef<HTMLElement>(null);
 
-  // Smooth Parallax and Intersection Tracking
+  // Parallax and Intersection Observer logic
   useEffect(() => {
     const handleScroll = () => {
       window.requestAnimationFrame(() => {
@@ -59,9 +59,8 @@ export const Hero: React.FC = () => {
     };
   }, []);
 
-  // Sequential Typing Animation logic
-  
-  // 1. Title Typing (80ms/char for natural pace)
+  // Sequential Typing Engine
+  // 1. Title Typing (80ms/char)
   useEffect(() => {
     if (!isVisible) return;
     let titleIndex = 0;
@@ -74,11 +73,11 @@ export const Hero: React.FC = () => {
         setIsTitleDone(true);
       }
     };
-    const timeout = setTimeout(typeTitle, 600);
+    const timeout = setTimeout(typeTitle, 500);
     return () => clearTimeout(timeout);
   }, [isVisible]);
 
-  // 2. Tagline Typing (45ms/char) - Starts after title
+  // 2. Tagline Typing (45ms/char)
   useEffect(() => {
     if (!isTitleDone) return;
     let taglineIndex = 0;
@@ -105,13 +104,13 @@ export const Hero: React.FC = () => {
       if (charIndex <= CODE_SNIPPET.length) {
         setTypedCode(CODE_SNIPPET.slice(0, charIndex));
         const char = CODE_SNIPPET[charIndex - 1];
-        let delay = 30; // Faster base speed for code
+        let delay = 30; // Moderate base speed
         
-        // Contextual pauses
-        if (char === '\n') delay = 500;
-        else if (char === ';') delay = 250;
-        else if (char === '{' || char === '}') delay = 400;
-        else if (char === ',') delay = 150;
+        // Logical pauses for realistic "typing" feel
+        if (char === '\n') delay = 550;      // Line completion pause
+        else if (char === ';') delay = 300;   // Statement completion pause
+        else if (char === '{' || char === '}') delay = 450; // Block start/end
+        else if (char === ',') delay = 200;   // Property separation pause
 
         charIndex++;
         timeoutId = setTimeout(typeCode, delay);
@@ -120,7 +119,7 @@ export const Hero: React.FC = () => {
       }
     };
 
-    const initialDelay = setTimeout(typeCode, 800);
+    const initialDelay = setTimeout(typeCode, 700);
     return () => {
       clearTimeout(timeoutId);
       clearTimeout(initialDelay);
@@ -131,21 +130,21 @@ export const Hero: React.FC = () => {
     <section 
       ref={heroRef} 
       id="home" 
-      className="relative pt-32 pb-24 md:pt-48 md:pb-40 lg:pt-60 lg:pb-56 overflow-hidden min-h-[95vh] lg:min-h-screen flex items-center bg-slate-950"
+      className="relative pt-32 pb-24 md:pt-48 md:pb-40 lg:pt-60 lg:pb-56 overflow-hidden min-h-[95vh] lg:min-h-screen flex items-center bg-slate-950 transition-colors duration-500"
     >
-      {/* Subtle Parallax Background Layer */}
+      {/* Subtle Parallax Background with Tuned Dark Overlay */}
       <div className="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-40 scale-110 will-change-transform"
+          className="absolute inset-0 bg-cover bg-center opacity-40 scale-110 will-change-transform transition-transform duration-75 ease-out"
           style={{ 
             backgroundImage: 'url("https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2070")',
             transform: `translate3d(0, ${scrollY * 0.12}px, 0)` 
           }}
           aria-hidden="true"
         />
-        {/* Optimized Dark Overlay for readability (75% opacity) */}
+        {/* Layered dark overlay (75% opacity) for high readability while retaining background depth */}
         <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-[1px]" />
-        {/* Soft edge masking */}
+        {/* Gradient mask for smooth transitions and text pop */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-transparent to-slate-950" />
       </div>
 
@@ -158,8 +157,8 @@ export const Hero: React.FC = () => {
               <span>Future-Proof Software Engineering</span>
             </div>
             
-            {/* Title with Scroll-triggered Fade & Slide */}
-            <h1 className={`text-4xl sm:text-6xl md:text-8xl lg:text-7xl xl:text-9xl font-black text-white tracking-tighter leading-[1.0] min-h-[2.1em] md:min-h-[1.1em] transition-all duration-1000 delay-100 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            {/* Title with Sequential Animation and Blinking Cursor */}
+            <h1 className={`text-4xl sm:text-6xl md:text-8xl lg:text-7xl xl:text-9xl font-black text-white tracking-tighter leading-[1.0] min-h-[2.1em] md:min-h-[1.1em] transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               Building the <br className="hidden md:block"/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-blue-200 inline-block">
                 {typedTitle}
@@ -170,6 +169,7 @@ export const Hero: React.FC = () => {
             </h1>
             
             <div className={`space-y-10 md:space-y-12 transition-all duration-1000 delay-300 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+              {/* Tagline Animation with Cursor */}
               <p className="text-lg sm:text-xl md:text-3xl text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium min-h-[3.5rem] md:min-h-0">
                 {typedTagline}
                 {isTitleDone && !isTaglineDone && (
@@ -177,14 +177,14 @@ export const Hero: React.FC = () => {
                 )}
               </p>
 
-              {/* Refined Buttons with Smooth Hover Interactions */}
+              {/* CTAs with Refined Styles and Hover Effects */}
               <div className="flex flex-col items-center lg:items-start gap-8">
                 <div className="flex flex-col sm:flex-row items-center gap-5 sm:gap-6 justify-center lg:justify-start w-full">
                   <Link to="/contact" className="w-full sm:w-auto">
                     <Button 
                       size="lg" 
                       variant="primary" 
-                      className="group relative transition-all duration-500 hover:scale-[1.04] hover:-translate-y-1 hover:bg-blue-500 hover:shadow-[0_20px_50px_rgba(37,99,235,0.4)] px-12 md:px-14 shadow-2xl shadow-blue-600/30 active:scale-95 w-full bg-blue-600 text-white border-none rounded-2xl overflow-hidden font-black"
+                      className="group relative transition-all duration-500 hover:scale-[1.05] hover:-translate-y-1.5 hover:bg-blue-500 hover:shadow-[0_20px_50px_rgba(37,99,235,0.4)] px-12 md:px-14 shadow-2xl shadow-blue-600/30 active:scale-95 w-full bg-blue-600 text-white border-none rounded-2xl overflow-hidden font-black"
                     >
                       <span className="relative z-10 flex items-center justify-center gap-2">
                         Request a Quote
@@ -196,7 +196,7 @@ export const Hero: React.FC = () => {
                     <Button 
                       variant="secondary" 
                       size="lg" 
-                      className="group transition-all duration-500 hover:scale-[1.04] hover:-translate-y-1 bg-white/10 backdrop-blur-md text-white border border-white/20 active:scale-95 w-full rounded-2xl flex items-center justify-center gap-2 px-12 md:px-14 hover:bg-white/20 hover:shadow-[0_20px_50px_rgba(255,255,255,0.1)] shadow-xl font-black"
+                      className="group transition-all duration-500 hover:scale-[1.05] hover:-translate-y-1.5 bg-white/10 backdrop-blur-md text-white border border-white/20 active:scale-95 w-full rounded-2xl flex items-center justify-center gap-2 px-12 md:px-14 hover:bg-white/20 hover:shadow-[0_20px_50px_rgba(255,255,255,0.1)] shadow-xl font-black"
                     >
                       <PlayCircle size={20} className="transition-transform group-hover:scale-110" />
                       Request a Demo
@@ -216,9 +216,9 @@ export const Hero: React.FC = () => {
                 </Link>
               </div>
 
-              {/* Trusted By (Staggered Entrance) */}
+              {/* Trusted Partners Subsection with Enhanced Hover Feedback */}
               <div className={`pt-12 md:pt-16 transition-all duration-1000 delay-500 border-t border-white/10 max-w-2xl mx-auto lg:mx-0 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] mb-10 text-center lg:text-left">
+                <p className="text-center lg:text-left text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] mb-10">
                   Trusted by Global Innovators
                 </p>
                 <div className="flex flex-wrap justify-center lg:justify-start items-center gap-8 sm:gap-12 lg:gap-14">
@@ -228,7 +228,7 @@ export const Hero: React.FC = () => {
                       className={`flex items-center gap-3 group cursor-default transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
                       style={{ transitionDelay: `${700 + idx * 100}ms` }}
                     >
-                      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl ${partner.color} flex items-center justify-center text-[10px] sm:text-xs font-black transition-all duration-500 group-hover:scale-110 group-hover:brightness-125 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.2)] shadow-sm`}>
+                      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl ${partner.color} flex items-center justify-center text-[10px] sm:text-xs font-black transition-all duration-500 group-hover:scale-115 group-hover:brightness-125 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] shadow-sm`}>
                         {partner.icon}
                       </div>
                       <span className="text-[10px] sm:text-xs font-black text-slate-500 group-hover:text-blue-400 dark:group-hover:text-white transition-colors duration-300 tracking-widest uppercase">
@@ -241,11 +241,11 @@ export const Hero: React.FC = () => {
             </div>
           </div>
 
-          {/* Code Visual - Character-by-character animation */}
+          {/* Code Visual Area: Floating Terminal with Character-by-Character Typing */}
           <div className={`flex-1 w-full max-w-2xl transition-all duration-1000 delay-300 transform ${isVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-12 scale-95'}`}>
             <div className="relative group/visual">
               
-              {/* Terminal with blinking cursor */}
+              {/* Terminal Frame with Blinking Cursor */}
               <div className="absolute -top-12 -left-8 w-full max-w-[320px] sm:max-w-sm z-20 hidden lg:block animate-float">
                 <div className="bg-slate-950/95 backdrop-blur-2xl rounded-[2.5rem] border border-white/10 shadow-2xl overflow-hidden ring-1 ring-white/10">
                   <div className="flex items-center justify-between px-6 py-4 bg-slate-900/50 border-b border-white/5">
@@ -260,7 +260,7 @@ export const Hero: React.FC = () => {
                   </div>
                   <div className="p-8 font-mono text-[11px] lg:text-[12px] leading-relaxed text-blue-300/90 h-80 overflow-hidden whitespace-pre-wrap relative bg-gradient-to-b from-transparent to-slate-950/20">
                     {typedCode}
-                    {/* Blinking Cursor */}
+                    {/* Blinking Cursor (Persistent after tagline starts typing) */}
                     {(isTaglineDone || !isCodeDone) && (
                       <span className="inline-block w-2.5 h-4 bg-blue-500 align-middle ml-1 animate-pulse shadow-[0_0_15px_rgba(59,130,246,0.8)]" />
                     )}
@@ -268,12 +268,12 @@ export const Hero: React.FC = () => {
                 </div>
               </div>
               
-              {/* Image Frame */}
+              {/* Supporting Visual Image */}
               <div className="relative bg-slate-900 border border-white/10 rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden aspect-[4/3] group/img ring-1 ring-white/5 transition-all duration-700">
                 <img 
                   src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=1200" 
                   className="w-full h-full object-cover opacity-60 transition-transform duration-1000 group-hover/img:scale-105" 
-                  alt="Engineering Workspace"
+                  alt="Modern Software Engineering Environment"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2070';
                   }}
@@ -282,7 +282,7 @@ export const Hero: React.FC = () => {
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-blue-600/10 rounded-full blur-[80px] pointer-events-none" />
               </div>
 
-              {/* Decorative Glow */}
+              {/* Decorative Accent Glow */}
               <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-blue-500/10 rounded-full blur-[120px] -z-10 group-hover/visual:scale-125 transition-transform duration-1000" />
             </div>
           </div>

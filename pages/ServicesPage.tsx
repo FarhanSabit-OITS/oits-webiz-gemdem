@@ -1,18 +1,31 @@
-
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Services } from '../components/Services';
 import { Process } from '../components/Process';
 import { Button } from '../components/ui/Button';
 import { Link } from 'react-router-dom';
 
 const ServicesPage: React.FC = () => {
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      const element = document.getElementById(hash.replace('#', ''));
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    }
+  }, [hash]);
+
   return (
     <div className="pt-20 animate-fade-in">
       <div className="py-32 bg-slate-950 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-transparent pointer-events-none" />
         <div className="container mx-auto px-6 relative z-10 text-center">
           <h2 className="text-blue-400 font-bold uppercase tracking-[0.3em] mb-6 text-sm">Our Capabilities</h2>
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-8 tracking-tighter">Engineering <br/> for Scale.</h1>
+          <h1 className="text-5xl md:text-7xl font-extrabold mb-8 tracking-tighter text-white leading-tight">Engineering <br/> for Scale.</h1>
           <p className="text-slate-400 max-w-2xl mx-auto text-xl leading-relaxed">
             High-performance solutions tailored to the needs of modern enterprises and fast-growing startups.
           </p>
@@ -64,7 +77,7 @@ const ServicesPage: React.FC = () => {
 
       <section className="py-24 bg-slate-50 dark:bg-slate-950">
         <div className="container mx-auto px-6 text-center">
-           <h3 className="text-3xl font-bold mb-10">Need a specialized technical consultation?</h3>
+           <h3 className="text-3xl font-bold mb-10 text-slate-900 dark:text-white">Need a specialized technical consultation?</h3>
            <Link to="/contact">
              <Button size="lg" className="rounded-full shadow-xl">Contact an Expert</Button>
            </Link>

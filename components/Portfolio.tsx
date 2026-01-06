@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { X, Tag, MonitorPlay, RotateCcw, Check, Play, Pause, Volume2, VolumeX, Info, Subtitles, Linkedin, Twitter, Share2, ImageIcon, Maximize, Minimize, AlertTriangle } from 'lucide-react';
+import { X, Tag, MonitorPlay, RotateCcw, Check, Play, Pause, Volume2, VolumeX, Info, Subtitles, Linkedin, Twitter, Share2, ImageIcon, Maximize, Minimize, AlertTriangle, Layers } from 'lucide-react';
 import { PROJECTS } from '../constants';
 import { Project } from '../types';
 import { Button } from './ui/Button';
@@ -138,23 +138,40 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
     if (videoRef.current) videoRef.current.currentTime = time;
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    switch (e.key.toLowerCase()) {
+      case ' ':
+        e.preventDefault();
+        togglePlay();
+        break;
+      case 'm':
+        e.preventDefault();
+        toggleMute();
+        break;
+      case 'f':
+        e.preventDefault();
+        toggleFullscreen();
+        break;
+      case 'c':
+        e.preventDefault();
+        setCaptionsEnabled(!captionsEnabled);
+        break;
+      case 'escape':
+        if (!document.fullscreenElement) onClose();
+        break;
+    }
+  };
+
   return (
     <div 
       ref={containerRef}
       className="relative w-full h-full bg-black flex flex-col justify-center group overflow-hidden outline-none"
-      onKeyDown={(e) => {
-        if (e.key === ' ') { e.preventDefault(); togglePlay(); }
-        if (e.key === 'm') { e.preventDefault(); toggleMute(); }
-        if (e.key === 'f') { e.preventDefault(); toggleFullscreen(); }
-        if (e.key === 'c') { e.preventDefault(); setCaptionsEnabled(!captionsEnabled); }
-        if (e.key === 'Escape' && !document.fullscreenElement) onClose();
-      }}
+      onKeyDown={handleKeyDown}
       tabIndex={0}
       role="region"
       aria-label="High performance video player"
       onMouseMove={() => {
         setShowControls(true);
-        // Autohide logic
         window.clearTimeout((window as any)._controlsTimeout);
         (window as any)._controlsTimeout = window.setTimeout(() => setShowControls(false), 3000);
       }}
@@ -186,15 +203,12 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
         role="group" 
         aria-label="Video controls"
       >
-        {/* Progress Bar Container */}
         <div className="relative group/progress mb-6">
           <div className="relative h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
-            {/* Buffered progress */}
             <div 
               className="absolute top-0 left-0 h-full bg-white/20 transition-all duration-300"
               style={{ width: `${(buffered / (duration || 1)) * 100}%` }}
             />
-            {/* Current progress */}
             <div 
               className="absolute top-0 left-0 h-full bg-blue-600 transition-all duration-100"
               style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
@@ -377,8 +391,22 @@ interface PortfolioProps {
 }
 
 export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(() => JSON.parse(localStorage.getItem(STORAGE_KEY_CATEGORIES) || '[]'));
-  const [selectedTags, setSelectedTags] = useState<string[]>(() => JSON.parse(localStorage.getItem(STORAGE_KEY_TAGS) || '[]'));
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY_CATEGORIES) || '[]');
+    } catch {
+      return [];
+    }
+  });
+  
+  const [selectedTags, setSelectedTags] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY_TAGS) || '[]');
+    } catch {
+      return [];
+    }
+  });
+
   const [loading, setLoading] = useState(true);
   const [modalState, setModalState] = useState<{ project: Project; autoPlay: boolean } | null>(null);
 
@@ -387,12 +415,14 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
     localStorage.setItem(STORAGE_KEY_TAGS, JSON.stringify(selectedTags));
   }, [selectedCategories, selectedTags]);
 
-  useEffect(() => { setTimeout(() => setLoading(false), 800); }, []);
+  useEffect(() => { 
+    const timer = setTimeout(() => setLoading(false), 800); 
+    return () => clearTimeout(timer);
+  }, []);
 
   const categories = useMemo(() => [ALL_CATEGORY, ...Array.from(new Set(PROJECTS.map(p => p.category)))], []);
   const allTags = useMemo(() => Array.from(new Set(PROJECTS.flatMap(p => p.technologies || []))).sort(), []);
 
-  // Faceted counts based on CURRENT filters for tags
   const dynamicCategoryCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     PROJECTS.forEach(p => {
@@ -404,7 +434,6 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
     return counts;
   }, [selectedTags]);
 
-  // Faceted counts based on CURRENT filters for categories
   const dynamicTagCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     PROJECTS.forEach(p => {
@@ -427,6 +456,14 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
     return limit ? projs.slice(0, limit) : projs;
   }, [selectedCategories, selectedTags, limit]);
 
+  const filterStatus = useMemo(() => {
+    if (selectedCategories.length === 0 && selectedTags.length === 0) return "All Projects";
+    const parts = [];
+    if (selectedCategories.length > 0) parts.push(`${selectedCategories.length} Categories`);
+    if (selectedTags.length > 0) parts.push(`${selectedTags.length} Technologies`);
+    return parts.join(' • ');
+  }, [selectedCategories, selectedTags]);
+
   const toggleCategory = (cat: string) => {
     if (cat === ALL_CATEGORY) setSelectedCategories([]);
     else setSelectedCategories(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]);
@@ -448,6 +485,16 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
   return (
     <section id="portfolio" className="py-24 bg-slate-50 dark:bg-slate-950 min-h-screen transition-colors duration-300">
       <div className="container mx-auto px-6">
+        
+        {/* Dynamic Filter Status Bar */}
+        {!limit && (
+          <div className="flex items-center gap-4 text-xs font-black text-slate-400 uppercase tracking-[0.3em] border-b border-slate-200 dark:border-slate-800 pb-6 mb-12 animate-fade-in">
+             <Layers size={14} className="text-blue-600" />
+             <span>Active Filters: <span className="text-slate-900 dark:text-blue-400">{filterStatus}</span></span>
+             <span className="ml-auto text-[10px] text-slate-400">Showing {filteredProjects.length} of {PROJECTS.length}</span>
+          </div>
+        )}
+
         <div className="mb-16 flex flex-col lg:flex-row gap-12">
            {!limit && (
              <aside className="w-full lg:w-80 space-y-8">
@@ -489,9 +536,9 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
                     {(selectedTags.length > 0 || selectedCategories.length > 0) && (
                       <button 
                         onClick={() => { setSelectedCategories([]); setSelectedTags([]); }} 
-                        className="text-xs text-blue-600 dark:text-blue-400 flex items-center gap-2 font-black uppercase tracking-widest hover:underline px-4 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-full"
+                        className="text-xs text-blue-600 dark:text-blue-400 flex items-center gap-2 font-black uppercase tracking-widest hover:underline px-4 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-full transition-all"
                       >
-                        <RotateCcw size={14}/> Reset Filters
+                        <RotateCcw size={14}/> Reset
                       </button>
                     )}
                   </div>
@@ -516,10 +563,23 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
                   </div>
                 </div>
               )}
-              <div key={limit ? 'home' : 'page'} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 min-h-[500px]">
-                {loading ? [1,2,3].map(i => <ProjectSkeleton key={i}/>) : filteredProjects.map((p, i) => <ProjectCard key={p.id} project={p} index={i} highlightedTags={selectedTags} onClick={() => setModalState({ project: p, autoPlay: false })} onViewDemo={() => setModalState({ project: p, autoPlay: true })} />)}
+              
+              <div 
+                key={selectedCategories.join('-') + selectedTags.join('-')}
+                className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 min-h-[500px] animate-in fade-in slide-in-from-bottom-4 duration-700"
+              >
+                {loading ? [1,2,3].map(i => <ProjectSkeleton key={i}/>) : filteredProjects.map((p, i) => (
+                  <ProjectCard 
+                    key={p.id} 
+                    project={p} 
+                    index={i} 
+                    highlightedTags={selectedTags} 
+                    onClick={() => setModalState({ project: p, autoPlay: false })} 
+                    onViewDemo={() => setModalState({ project: p, autoPlay: true })} 
+                  />
+                ))}
                 {!loading && filteredProjects.length === 0 && (
-                   <div className="col-span-full py-32 text-center bg-white dark:bg-slate-900 rounded-[3rem] border border-dashed border-slate-200 dark:border-slate-800">
+                   <div className="col-span-full py-32 text-center bg-white dark:bg-slate-900 rounded-[3rem] border border-dashed border-slate-200 dark:border-slate-800 animate-in zoom-in-95 duration-500">
                       <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-6">
                         <X className="text-slate-300" size={32} />
                       </div>
