@@ -85,7 +85,7 @@ export const Hero: React.FC = () => {
       if (taglineIndex <= TAGLINE.length) {
         setTypedTagline(TAGLINE.slice(0, taglineIndex));
         taglineIndex++;
-        setTimeout(typeTagline, 20 + Math.random() * 30);
+        setTimeout(typeTagline, 30 + Math.random() * 30);
       } else {
         setIsTaglineDone(true);
       }
@@ -104,11 +104,13 @@ export const Hero: React.FC = () => {
         setTypedCode(CODE_SNIPPET.slice(0, charIndex));
         const char = CODE_SNIPPET[charIndex - 1];
         
-        // Logical speed variance based on syntax
-        let delay = 30 + Math.random() * 20; 
-        if (char === '\n') delay = 450;
-        else if (char === ';') delay = 200;
-        else if (char === '{' || char === '}') delay = 350;
+        // Refined speed for natural typing feel (Moderate)
+        let delay = 30 + Math.random() * 50; 
+        
+        if (char === '\n') delay = 400; // Pause at end of line
+        else if (char === ';') delay = 200; // Micro pause
+        else if (char === '{' || char === '}') delay = 300; // Syntax pause
+        else if (char === ',') delay = 150;
 
         charIndex++;
         timeoutId = setTimeout(typeCode, delay);
@@ -117,7 +119,7 @@ export const Hero: React.FC = () => {
       }
     };
 
-    const initialDelay = setTimeout(typeCode, 500);
+    const initialDelay = setTimeout(typeCode, 600);
     return () => {
       clearTimeout(timeoutId);
       clearTimeout(initialDelay);
@@ -133,18 +135,17 @@ export const Hero: React.FC = () => {
       {/* Subtle Parallax Background Layer */}
       <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-40 scale-125 will-change-transform"
+          className="absolute inset-0 bg-cover bg-center opacity-40 will-change-transform"
           style={{ 
             backgroundImage: 'url("https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2070")',
-            // Parallax factor of 0.2 provides depth without being distracting
-            transform: `translate3d(0, ${scrollY * 0.2}px, 0)` 
+            // Parallax factor of 0.15 provides subtle depth without being distracting
+            transform: `translate3d(0, ${scrollY * 0.15}px, 0) scale(1.1)` 
           }}
           aria-hidden="true"
         />
         
         {/* Layered dark overlay for extreme text readability */}
-        {/* Base dark tint */}
-        <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-[1px]" />
+        <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-[1px]" />
         
         {/* Radial gradient for focus on content */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(15,23,42,0.8)_100%)]" />
@@ -186,7 +187,7 @@ export const Hero: React.FC = () => {
                     <Button 
                       size="lg" 
                       variant="primary" 
-                      className="group relative transition-all duration-500 hover:scale-[1.05] hover:-translate-y-1.5 hover:bg-blue-500 hover:shadow-[0_20px_50px_rgba(37,99,235,0.4)] px-12 md:px-14 shadow-2xl shadow-blue-600/30 active:scale-95 w-full bg-blue-600 text-white border-none rounded-2xl overflow-hidden font-black"
+                      className="group relative transition-all duration-500 hover:scale-[1.03] hover:bg-blue-500 hover:shadow-[0_20px_50px_rgba(37,99,235,0.4)] px-12 md:px-14 shadow-2xl shadow-blue-600/30 active:scale-95 w-full bg-blue-600 text-white border-none rounded-2xl overflow-hidden font-black"
                     >
                       <span className="relative z-10 flex items-center justify-center gap-2">
                         Request a Quote
@@ -198,7 +199,7 @@ export const Hero: React.FC = () => {
                     <Button 
                       variant="secondary" 
                       size="lg" 
-                      className="group transition-all duration-500 hover:scale-[1.05] hover:-translate-y-1.5 bg-white/10 backdrop-blur-md text-white border border-white/20 active:scale-95 w-full rounded-2xl flex items-center justify-center gap-2 px-12 md:px-14 hover:bg-white/20 hover:text-blue-200 hover:shadow-[0_20px_50px_rgba(255,255,255,0.15)] ring-1 ring-white/10 hover:ring-white/40 shadow-xl font-black"
+                      className="group transition-all duration-500 hover:scale-[1.03] bg-white/10 backdrop-blur-md text-white border border-white/20 active:scale-95 w-full rounded-2xl flex items-center justify-center gap-2 px-12 md:px-14 hover:bg-white/20 hover:text-blue-200 hover:shadow-[0_20px_50px_rgba(255,255,255,0.15)] ring-1 ring-white/10 hover:ring-white/40 shadow-xl font-black"
                     >
                       <PlayCircle size={20} className="transition-transform group-hover:scale-110" />
                       Request a Demo
@@ -210,7 +211,7 @@ export const Hero: React.FC = () => {
                   <Button 
                     variant="ghost" 
                     size="md" 
-                    className="group transition-all duration-500 hover:scale-[1.04] hover:bg-white/10 hover:text-white text-slate-400 rounded-2xl flex items-center justify-center gap-2 border border-white/10 hover:border-white/25 px-10 w-full lg:w-auto font-bold"
+                    className="group transition-all duration-500 hover:scale-[1.02] hover:bg-white/10 hover:text-white text-slate-400 rounded-2xl flex items-center justify-center gap-2 border border-white/10 hover:border-white/25 px-10 w-full lg:w-auto font-bold"
                   >
                     <MessageCircle size={18} className="transition-transform group-hover:rotate-12" />
                     Contact Us Directly
@@ -232,7 +233,7 @@ export const Hero: React.FC = () => {
                       <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl ${partner.color} flex items-center justify-center text-[10px] sm:text-xs font-black transition-all duration-500 group-hover:scale-115 group-hover:brightness-125 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] shadow-sm`}>
                         {partner.icon}
                       </div>
-                      <span className="text-[10px] sm:text-xs font-black text-slate-500 group-hover:text-blue-400 dark:group-hover:text-white transition-colors duration-300 tracking-widest uppercase">
+                      <span className="text-sm font-black text-slate-500 group-hover:text-blue-400 dark:group-hover:text-white transition-colors duration-300 tracking-tight">
                         {partner.name}
                       </span>
                     </div>
@@ -259,7 +260,8 @@ export const Hero: React.FC = () => {
                   </div>
                   <div className="p-8 font-mono text-[11px] lg:text-[12px] leading-relaxed text-blue-300/90 h-80 overflow-hidden whitespace-pre-wrap relative bg-gradient-to-b from-transparent to-slate-950/20">
                     {typedCode}
-                    {(isTaglineDone || !isCodeDone) && (
+                    {/* Blinking cursor that stays at the end of the text */}
+                    {isTaglineDone && (
                       <span className="inline-block w-2.5 h-4 bg-blue-500 align-middle ml-1 animate-pulse shadow-[0_0_15px_rgba(59,130,246,0.8)]" />
                     )}
                   </div>

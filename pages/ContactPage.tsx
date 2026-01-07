@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { Contact } from '../components/Contact';
+import { ADDRESS } from '../constants';
 
 const ContactPage: React.FC = () => {
   return (
@@ -18,10 +18,28 @@ const ContactPage: React.FC = () => {
         <Contact />
       </div>
 
+      {/* Map Section */}
+      <section className="h-[400px] md:h-[500px] w-full bg-slate-200 dark:bg-slate-800 relative z-0">
+        <iframe 
+          width="100%" 
+          height="100%" 
+          id="gmap_canvas" 
+          src={`https://maps.google.com/maps?q=${encodeURIComponent(ADDRESS)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+          frameBorder="0" 
+          scrolling="no" 
+          marginHeight={0} 
+          marginWidth={0}
+          title="OITS Dhaka Office Location"
+          className="filter grayscale contrast-125 opacity-80 hover:opacity-100 transition-opacity duration-500"
+          loading="lazy"
+        ></iframe>
+        <div className="absolute inset-0 pointer-events-none border-y border-slate-900/10 dark:border-white/10"></div>
+      </section>
+
       <section className="py-24 bg-white dark:bg-slate-900">
         <div className="container mx-auto px-6">
            <div className="max-w-2xl mx-auto text-center">
-              <h2 className="text-2xl font-bold mb-6">Our Process for Inquiries</h2>
+              <h2 className="text-2xl font-bold mb-6 text-slate-900 dark:text-white">Our Process for Inquiries</h2>
               <div className="space-y-8 text-left">
                 {[
                   { step: "1. Submission", text: "Fill out the form with your project details and goals." },

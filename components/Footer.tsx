@@ -1,7 +1,6 @@
 import React from 'react';
-import { Terminal, Github, Linkedin, Twitter, Facebook, Sun, Moon } from 'lucide-react';
-import { COMPANY_NAME, NAV_ITEMS, SERVICES } from '../constants';
-import { SectionId } from '../types';
+import { Terminal, Github, Linkedin, Twitter, Facebook, Sun, Moon, MapPin } from 'lucide-react';
+import { COMPANY_NAME, NAV_ITEMS, SERVICES, ADDRESS } from '../constants';
 import { Link } from 'react-router-dom';
 
 interface FooterProps {
@@ -27,7 +26,6 @@ const SocialLink = ({ href, icon: Icon, label }: { href: string; icon: any; labe
   </a>
 );
 
-// Fix: Making children optional to resolve TypeScript "missing children" prop errors encountered during map iterations
 const FooterLink = ({ href, children }: { href: string; children?: React.ReactNode }) => {
   const content = (
     <span className="inline-block transition-all duration-300 group-hover:translate-x-1 group-hover:text-blue-400">
@@ -58,9 +56,22 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
               </div>
               <span className="text-2xl font-black tracking-tighter">{COMPANY_NAME}</span>
             </Link>
-            <p className="text-sm leading-relaxed text-slate-400 font-medium">
-              We architect resilient digital systems that power the world's most innovative brands. From concept to scale, we are your strategic engineering partner.
-            </p>
+            <div className="flex flex-col gap-4">
+              <p className="text-sm leading-relaxed text-slate-400 font-medium">
+                We architect resilient digital systems that power the world's most innovative brands. From concept to scale, we are your strategic engineering partner.
+              </p>
+              <a 
+                href={`https://maps.google.com/maps?q=${encodeURIComponent(ADDRESS)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-2 text-xs font-bold text-slate-500 hover:text-blue-400 transition-colors"
+                aria-label="View our office location on Google Maps"
+              >
+                <MapPin size={14} className="mt-0.5 shrink-0" />
+                <span>{ADDRESS}</span>
+              </a>
+            </div>
+            
             <div className="flex gap-2">
               <SocialLink href="#" icon={Github} label="GitHub" />
               <SocialLink href="#" icon={Linkedin} label="LinkedIn" />

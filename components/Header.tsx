@@ -24,7 +24,9 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      window.requestAnimationFrame(() => {
+        setIsScrolled(window.scrollY > 20);
+      });
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
