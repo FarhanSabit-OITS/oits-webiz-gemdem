@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { X, Tag, MonitorPlay, RotateCcw, Check, Play, Pause, Volume2, VolumeX, Info, Subtitles, Linkedin, Twitter, Share2, ImageIcon, Maximize, Minimize, AlertTriangle, Layers, FilterX } from 'lucide-react';
+import { X, Tag, MonitorPlay, RotateCcw, Check, Play, Pause, AlertTriangle, Layers, FilterX, Linkedin, Twitter, Maximize, Minimize, Share2 } from 'lucide-react';
 import { PROJECTS } from '../constants';
 import { Project } from '../types';
 import { Button } from './ui/Button';
@@ -44,10 +44,6 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
   const [isPlaying, setIsPlaying] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [buffered, setBuffered] = useState(0);
-  const [volume, setVolume] = useState(1);
-  const [isMuted, setIsMuted] = useState(false);
-  const [captionsEnabled, setCaptionsEnabled] = useState(true);
   const [showControls, setShowControls] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [videoError, setVideoError] = useState<string | null>(null);
@@ -58,11 +54,6 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
 
     const updateTime = () => setCurrentTime(video.currentTime);
     const updateDuration = () => setDuration(video.duration);
-    const updateProgress = () => {
-      if (video.buffered.length > 0) {
-        setBuffered(video.buffered.end(video.buffered.length - 1));
-      }
-    };
     const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
     const handleError = () => {
@@ -71,7 +62,6 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
 
     video.addEventListener('timeupdate', updateTime);
     video.addEventListener('loadedmetadata', updateDuration);
-    video.addEventListener('progress', updateProgress);
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
     video.addEventListener('error', handleError);
@@ -86,7 +76,6 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
     return () => {
       video.removeEventListener('timeupdate', updateTime);
       video.removeEventListener('loadedmetadata', updateDuration);
-      video.removeEventListener('progress', updateProgress);
       video.removeEventListener('play', handlePlay);
       video.removeEventListener('pause', handlePause);
       video.removeEventListener('error', handleError);
@@ -311,7 +300,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
 
   const shareProject = (platform: 'linkedin' | 'twitter') => {
     if (!modalState) return;
-    const url = window.location.href;
+    const url = window.location.href; // In a real app this would be a permalink to the project
     const text = `Check out this project by OITS Dhaka: ${modalState.project.title}`;
     const links = {
       linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
@@ -335,29 +324,31 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
         <div className="mb-16 flex flex-col lg:flex-row gap-12">
            {!limit && (
              <aside className="w-full lg:w-80 space-y-8">
-                <h4 className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] mb-6">Verticals</h4>
-                <nav className="flex lg:flex-col gap-3 overflow-x-auto no-scrollbar pb-2" role="group" aria-label="Vertical Filter Navigation">
-                  {categories.map(cat => {
-                    const active = cat === ALL_CATEGORY ? selectedCategories.length === 0 : selectedCategories.includes(cat);
-                    const count = cat === ALL_CATEGORY ? PROJECTS.length : (dynamicCategoryCounts[cat] || 0);
-                    return (
-                      <button 
-                        key={cat} 
-                        onClick={() => toggleCategory(cat)} 
-                        aria-pressed={active} 
-                        className={`flex items-center justify-between px-5 py-3 rounded-2xl text-sm font-bold text-left transition-all border outline-none active:scale-[0.97] hover:scale-105 ${active ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-xl border-transparent' : 'bg-white dark:bg-slate-900 text-slate-600 border-slate-200 dark:border-slate-800 hover:border-blue-300'}`}
-                      >
-                        <span className="flex items-center gap-2">
-                           {cat}
-                           {active && cat !== ALL_CATEGORY && <Check size={14} />}
-                        </span>
-                        <span className={`text-[10px] px-2 py-0.5 rounded-md font-black ${active ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'}`}>
-                           {count}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </nav>
+                <div>
+                  <h4 className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] mb-6">Verticals</h4>
+                  <nav className="flex lg:flex-col gap-3 overflow-x-auto no-scrollbar pb-2" role="group" aria-label="Vertical Filter Navigation">
+                    {categories.map(cat => {
+                      const active = cat === ALL_CATEGORY ? selectedCategories.length === 0 : selectedCategories.includes(cat);
+                      const count = cat === ALL_CATEGORY ? PROJECTS.length : (dynamicCategoryCounts[cat] || 0);
+                      return (
+                        <button 
+                          key={cat} 
+                          onClick={() => toggleCategory(cat)} 
+                          aria-pressed={active} 
+                          className={`flex items-center justify-between px-5 py-3 rounded-2xl text-sm font-bold text-left transition-all border outline-none active:scale-[0.97] hover:scale-105 ${active ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-xl border-transparent' : 'bg-white dark:bg-slate-900 text-slate-600 border-slate-200 dark:border-slate-800 hover:border-blue-300'}`}
+                        >
+                          <span className="flex items-center gap-2">
+                             {cat}
+                             {active && cat !== ALL_CATEGORY && <Check size={14} />}
+                          </span>
+                          <span className={`text-[10px] px-2 py-0.5 rounded-md font-black ${active ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'}`}>
+                             {count}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </nav>
+                </div>
              </aside>
            )}
            <div className="flex-1">
@@ -465,20 +456,28 @@ export const Portfolio: React.FC<PortfolioProps> = ({ limit }) => {
             </div>
             <div className="p-10 md:p-16 overflow-y-auto">
               <div className="max-w-4xl">
-                 <div className="flex items-center justify-between mb-10">
+                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 gap-4">
                     <h4 className="text-sm font-black text-blue-600 uppercase tracking-[0.3em]">Case Study Overview</h4>
                     <div className="flex items-center gap-4">
-                      <button onClick={() => shareProject('linkedin')} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-blue-600 hover:text-white transition-all shadow-sm">
-                        <Linkedin size={18} />
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-widest mr-2">Share Project:</span>
+                      <button onClick={() => shareProject('linkedin')} aria-label="Share on LinkedIn" className="p-2.5 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-[#0077b5] hover:text-white transition-all shadow-sm hover:scale-110 active:scale-95 group">
+                        <Linkedin size={18} className="transition-transform group-hover:-rotate-6" />
                       </button>
-                      <button onClick={() => shareProject('twitter')} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-blue-400 hover:text-white transition-all shadow-sm">
-                        <Twitter size={18} />
+                      <button onClick={() => shareProject('twitter')} aria-label="Share on Twitter" className="p-2.5 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-sky-500 hover:text-white transition-all shadow-sm hover:scale-110 active:scale-95 group">
+                        <Twitter size={18} className="transition-transform group-hover:rotate-6" />
                       </button>
                     </div>
                  </div>
                  <p className="text-slate-700 dark:text-slate-300 text-xl leading-relaxed mb-10 font-medium">
                    {modalState.project.fullDescription || modalState.project.description}
                  </p>
+                 <div className="flex flex-wrap gap-3">
+                   {modalState.project.technologies?.map(tech => (
+                     <span key={tech} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300">
+                       {tech}
+                     </span>
+                   ))}
+                 </div>
               </div>
             </div>
           </div>

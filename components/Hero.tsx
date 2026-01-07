@@ -4,7 +4,7 @@ import { ArrowRight, Terminal as TerminalIcon, Zap, PlayCircle, MessageCircle } 
 import { Button } from './ui/Button';
 import { TAGLINE } from '../constants';
 
-const TITLE_TEXT = "Building the Digital Elite";
+const TYPING_TITLE = "Digital Elite";
 const CODE_SNIPPET = `// OITS Dhaka Project Config
 const project = {
   client: "Innovative Startup",
@@ -32,16 +32,16 @@ export const Hero: React.FC = () => {
   const [typedTitle, setTypedTitle] = useState("");
   const [typedTagline, setTypedTagline] = useState("");
   const [typedCode, setTypedCode] = useState("");
+  
   const [isTitleDone, setIsTitleDone] = useState(false);
   const [isTaglineDone, setIsTaglineDone] = useState(false);
-  const [isCodeDone, setIsCodeDone] = useState(false);
+  
   const [scrollY, setScrollY] = useState(0);
   const heroRef = useRef<HTMLElement>(null);
 
   // Optimized Scroll Tracker for Parallax
   useEffect(() => {
     const handleScroll = () => {
-      // Use requestAnimationFrame for smooth non-blocking performance
       window.requestAnimationFrame(() => {
         setScrollY(window.scrollY);
       });
@@ -61,70 +61,61 @@ export const Hero: React.FC = () => {
     };
   }, []);
 
-  // Sequential Typing Engine with Natural Jitter
+  // --- Animation Sequence ---
+
+  // 1. Type Title
   useEffect(() => {
     if (!isVisible) return;
-    let titleIndex = 0;
-    const typeTitle = () => {
-      if (titleIndex <= TITLE_TEXT.length) {
-        setTypedTitle(TITLE_TEXT.slice(0, titleIndex));
-        titleIndex++;
-        setTimeout(typeTitle, 50 + Math.random() * 50);
-      } else {
-        setIsTitleDone(true);
-      }
-    };
-    const timeout = setTimeout(typeTitle, 400);
-    return () => clearTimeout(timeout);
-  }, [isVisible]);
+    
+    if (typedTitle.length < TYPING_TITLE.length) {
+      const timeout = setTimeout(() => {
+        setTypedTitle(TYPING_TITLE.slice(0, typedTitle.length + 1));
+      }, 100); // Moderate headline speed
+      return () => clearTimeout(timeout);
+    } else if (!isTitleDone) {
+      // Small pause before starting tagline
+      const timeout = setTimeout(() => setIsTitleDone(true), 500);
+      return () => clearTimeout(timeout);
+    }
+  }, [isVisible, typedTitle, isTitleDone]);
 
+  // 2. Type Tagline (after Title)
   useEffect(() => {
     if (!isTitleDone) return;
-    let taglineIndex = 0;
-    const typeTagline = () => {
-      if (taglineIndex <= TAGLINE.length) {
-        setTypedTagline(TAGLINE.slice(0, taglineIndex));
-        taglineIndex++;
-        setTimeout(typeTagline, 30 + Math.random() * 30);
-      } else {
-        setIsTaglineDone(true);
-      }
-    };
-    const timeout = setTimeout(typeTagline, 200);
-    return () => clearTimeout(timeout);
-  }, [isTitleDone]);
 
+    if (typedTagline.length < TAGLINE.length) {
+      const timeout = setTimeout(() => {
+        setTypedTagline(TAGLINE.slice(0, typedTagline.length + 1));
+      }, 30); // Faster, readable speed for body text
+      return () => clearTimeout(timeout);
+    } else if (!isTaglineDone) {
+      setIsTaglineDone(true);
+    }
+  }, [isTitleDone, typedTagline, isTaglineDone]);
+
+  // 3. Type Code (after Tagline)
   useEffect(() => {
     if (!isTaglineDone) return;
-    let charIndex = 0;
-    let timeoutId: ReturnType<typeof setTimeout>;
 
-    const typeCode = () => {
-      if (charIndex <= CODE_SNIPPET.length) {
-        setTypedCode(CODE_SNIPPET.slice(0, charIndex));
-        const char = CODE_SNIPPET[charIndex - 1];
-        
-        // Refined speed for natural typing feel (Moderate)
-        let delay = 30 + Math.random() * 50; 
-        
-        if (char === '\n') delay = 400; // Pause at end of line
-        else if (char === ';') delay = 200; // Micro pause
-        else if (char === '{' || char === '}') delay = 300; // Syntax pause
-        else if (char === ',') delay = 150;
+    if (typedCode.length < CODE_SNIPPET.length) {
+      const nextChar = CODE_SNIPPET[typedCode.length];
+      
+      // Dynamic typing speed for realism
+      let delay = 30; // Base speed
+      if (nextChar === '\n') delay = 400; // Pause at line breaks
+      else if (nextChar === ';') delay = 150; // Pause at statements
+      else if (nextChar === '{' || nextChar === '}') delay = 200; // Pause at blocks
+      else if (nextChar === ' ') delay = 10; // Fast spaces
+      
+      // Randomize slightly
+      delay += Math.random() * 20;
 
-        charIndex++;
-        timeoutId = setTimeout(typeCode, delay);
-      } else {
-        setIsCodeDone(true);
-      }
-    };
-
-    const initialDelay = setTimeout(typeCode, 600);
-    return () => {
-      clearTimeout(timeoutId);
-      clearTimeout(initialDelay);
-    };
-  }, [isTaglineDone]);
+      const timeout = setTimeout(() => {
+        setTypedCode(CODE_SNIPPET.slice(0, typedCode.length + 1));
+      }, delay);
+      return () => clearTimeout(timeout);
+    }
+  }, [isTaglineDone, typedCode]);
 
   return (
     <section 
@@ -260,7 +251,7 @@ export const Hero: React.FC = () => {
                   </div>
                   <div className="p-8 font-mono text-[11px] lg:text-[12px] leading-relaxed text-blue-300/90 h-80 overflow-hidden whitespace-pre-wrap relative bg-gradient-to-b from-transparent to-slate-950/20">
                     {typedCode}
-                    {/* Blinking cursor that stays at the end of the text */}
+                    {/* Blinking cursor for code snippet */}
                     {isTaglineDone && (
                       <span className="inline-block w-2.5 h-4 bg-blue-500 align-middle ml-1 animate-pulse shadow-[0_0_15px_rgba(59,130,246,0.8)]" />
                     )}
