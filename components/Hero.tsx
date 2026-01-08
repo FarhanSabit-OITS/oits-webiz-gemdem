@@ -73,10 +73,9 @@ export const Hero: React.FC = () => {
     if (typedTitle.length < TYPING_TITLE.length) {
       const timeout = setTimeout(() => {
         setTypedTitle(TYPING_TITLE.slice(0, typedTitle.length + 1));
-      }, 100); // Moderate headline speed
+      }, 100); 
       return () => clearTimeout(timeout);
     } else if (!isTitleDone) {
-      // Small pause before starting tagline
       const timeout = setTimeout(() => setIsTitleDone(true), 500);
       return () => clearTimeout(timeout);
     }
@@ -89,7 +88,7 @@ export const Hero: React.FC = () => {
     if (typedTagline.length < TAGLINE.length) {
       const timeout = setTimeout(() => {
         setTypedTagline(TAGLINE.slice(0, typedTagline.length + 1));
-      }, 30); // Faster, readable speed for body text
+      }, 30); 
       return () => clearTimeout(timeout);
     } else if (!isTaglineDone) {
       setIsTaglineDone(true);
@@ -103,19 +102,21 @@ export const Hero: React.FC = () => {
     if (typedCode.length < CODE_SNIPPET.length) {
       const nextChar = CODE_SNIPPET[typedCode.length];
       
-      // Dynamic typing speed for realism - Adjusted to be moderate
-      let delay = 50; // Base speed (slower than before)
-      if (nextChar === '\n') delay = 500; // Pause at line breaks
-      else if (nextChar === ';') delay = 200; // Pause at statements
-      else if (nextChar === '{' || nextChar === '}') delay = 300; // Pause at blocks
-      else if (nextChar === ' ') delay = 20; // Fast spaces
+      // Refined moderate typing speed logic
+      let delay = 60; // Base speed
       
-      // Randomize slightly for natural feel
-      delay += Math.random() * 30;
+      if (nextChar === '\n') delay = 500; // Line pause
+      else if (nextChar === ';') delay = 200; // Statement pause
+      else if (nextChar === '{' || nextChar === '}') delay = 250; // Block pause
+      else if (nextChar === ' ') delay = 20; // Quick space
+      else if (/[A-Z]/.test(nextChar)) delay = 80; // Shift key simulation
+      
+      // Add natural variance
+      delay += Math.random() * 30 - 10;
 
       const timeout = setTimeout(() => {
         setTypedCode(CODE_SNIPPET.slice(0, typedCode.length + 1));
-      }, delay);
+      }, Math.max(10, delay));
       return () => clearTimeout(timeout);
     }
   }, [isTaglineDone, typedCode]);
@@ -126,37 +127,37 @@ export const Hero: React.FC = () => {
       id="home" 
       className="relative pt-32 pb-24 md:pt-48 md:pb-40 lg:pt-60 lg:pb-56 overflow-hidden min-h-[95vh] lg:min-h-screen flex items-center bg-slate-950"
     >
-      {/* Parallax Background Layer */}
+      {/* Background with Parallax and Overlay */}
       <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-40 will-change-transform"
+          className="absolute inset-0 bg-cover bg-center will-change-transform"
           style={{ 
             backgroundImage: 'url("https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2070")',
-            // Parallax factor of 0.2 provides nice depth. Scale 1.15 prevents edge artifacts during scroll.
             transform: `translate3d(0, ${scrollY * 0.2}px, 0) scale(1.15)` 
           }}
           aria-hidden="true"
         />
         
-        {/* Layered dark overlay for extreme text readability - Adjusted to 80% opacity */}
-        <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[2px]" />
+        {/* Dark overlay for text readability - 75% opacity for balance */}
+        <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-[2px]" />
         
-        {/* Radial gradient for focus on content */}
+        {/* Gradients */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(15,23,42,0.9)_100%)]" />
-        
-        {/* Vertical gradient for transition from header to footer sections */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-transparent to-slate-950" />
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24 xl:gap-32">
           
+          {/* Text Content */}
           <div className="flex-1 space-y-10 md:space-y-14 text-center lg:text-left w-full">
+            {/* Tag */}
             <div className={`inline-flex items-center gap-2 px-5 py-2 rounded-full bg-blue-500/10 border border-blue-400/20 text-[10px] md:text-xs font-black text-blue-300 uppercase tracking-[0.3em] transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               <Zap size={14} className="fill-current animate-pulse text-blue-400" />
               <span>Future-Proof Software Engineering</span>
             </div>
             
+            {/* Heading */}
             <h1 className={`text-4xl sm:text-6xl md:text-8xl lg:text-7xl xl:text-9xl font-black text-white tracking-tighter leading-[1.0] min-h-[2.1em] md:min-h-[1.1em] transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               Building the <br className="hidden md:block"/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-blue-200 inline-block">
@@ -167,6 +168,7 @@ export const Hero: React.FC = () => {
               </span>
             </h1>
             
+            {/* Tagline and Buttons */}
             <div className={`space-y-10 md:space-y-12 transition-all duration-1000 delay-300 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
               <p className="text-lg sm:text-xl md:text-3xl text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium min-h-[3.5rem] md:min-h-0">
                 {typedTagline}
@@ -175,6 +177,7 @@ export const Hero: React.FC = () => {
                 )}
               </p>
 
+              {/* Buttons */}
               <div className="flex flex-col items-center lg:items-start gap-8">
                 <div className="flex flex-col sm:flex-row items-center gap-5 sm:gap-6 justify-center lg:justify-start w-full">
                   <Link to="/contact" className="w-full sm:w-auto">
@@ -213,6 +216,7 @@ export const Hero: React.FC = () => {
                 </Link>
               </div>
 
+              {/* Trusted By */}
               <div className={`pt-12 md:pt-16 transition-all duration-1000 delay-500 border-t border-white/10 max-w-2xl mx-auto lg:mx-0 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
                 <p className="text-center lg:text-left text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] mb-10">
                   Trusted by Global Innovators
@@ -237,9 +241,11 @@ export const Hero: React.FC = () => {
             </div>
           </div>
 
+          {/* Visual/Code Snippet */}
           <div className={`flex-1 w-full max-w-2xl transition-all duration-1000 delay-300 transform ${isVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-12 scale-95'}`}>
             <div className="relative group/visual">
               
+              {/* Floating Code Window */}
               <div className="absolute -top-12 -left-8 w-full max-w-[320px] sm:max-w-sm z-20 hidden lg:block animate-float">
                 <div className="bg-slate-950/95 backdrop-blur-2xl rounded-[2.5rem] border border-white/10 shadow-2xl overflow-hidden ring-1 ring-white/10">
                   <div className="flex items-center justify-between px-6 py-4 bg-slate-900/50 border-b border-white/5">
@@ -262,6 +268,7 @@ export const Hero: React.FC = () => {
                 </div>
               </div>
               
+              {/* Image Container */}
               <div className="relative bg-slate-900 border border-white/10 rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden aspect-[4/3] group/img ring-1 ring-white/5 transition-all duration-700">
                 <img 
                   src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=1200" 
