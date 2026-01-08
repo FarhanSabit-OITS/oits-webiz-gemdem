@@ -39,13 +39,13 @@ export const Hero: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
   const heroRef = useRef<HTMLElement>(null);
 
-  // Optimized Parallax scroll tracker
+  // High-performance Parallax scroll tracker
   useEffect(() => {
     const handleScroll = () => {
       if (!heroRef.current) return;
       const rect = heroRef.current.getBoundingClientRect();
       
-      // Only process parallax if hero is visible in viewport for performance
+      // Only process parallax if hero is visible in viewport
       if (rect.top < window.innerHeight && rect.bottom > 0) {
         window.requestAnimationFrame(() => {
           setScrollY(window.scrollY);
@@ -69,17 +69,17 @@ export const Hero: React.FC = () => {
 
   // --- Animation Sequence ---
 
-  // 1. Type Title
+  // 1. Type Title: "Building the" is static, "Digital Elite" is typed
   useEffect(() => {
     if (!isVisible) return;
     
     if (typedTitle.length < TYPING_TITLE.length) {
       const timeout = setTimeout(() => {
         setTypedTitle(TYPING_TITLE.slice(0, typedTitle.length + 1));
-      }, 100); 
+      }, 120); 
       return () => clearTimeout(timeout);
     } else if (!isTitleDone) {
-      const timeout = setTimeout(() => setIsTitleDone(true), 500);
+      const timeout = setTimeout(() => setIsTitleDone(true), 800);
       return () => clearTimeout(timeout);
     }
   }, [isVisible, typedTitle, isTitleDone]);
@@ -104,13 +104,13 @@ export const Hero: React.FC = () => {
 
     if (typedCode.length < CODE_SNIPPET.length) {
       const nextChar = CODE_SNIPPET[typedCode.length];
-      let delay = 45; 
+      let delay = 40; 
       
-      if (nextChar === '\n') delay = 600;
-      else if ([';', '{', '}'].includes(nextChar)) delay = 250;
+      if (nextChar === '\n') delay = 500;
+      else if ([';', '{', '}'].includes(nextChar)) delay = 200;
       else if (nextChar === ' ') delay = 15;
       
-      delay += Math.random() * 30 - 15;
+      delay += Math.random() * 20 - 10;
 
       const timeout = setTimeout(() => {
         setTypedCode(CODE_SNIPPET.slice(0, typedCode.length + 1));
@@ -125,26 +125,26 @@ export const Hero: React.FC = () => {
       id="home" 
       className="relative pt-32 pb-24 md:pt-48 md:pb-40 lg:pt-60 lg:pb-56 overflow-hidden min-h-[95vh] lg:min-h-screen flex items-center bg-slate-950"
     >
-      {/* Subtle Parallax Background Layer with Enhanced Overlay */}
+      {/* Subtle Parallax Background Layer with Deep Overlay */}
       <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
         <div 
-          className="absolute inset-0 bg-cover bg-center will-change-transform transition-transform duration-75 ease-out"
+          className="absolute inset-0 bg-cover bg-center will-change-transform"
           style={{ 
             backgroundImage: 'url("https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2070")',
-            // Subtle 0.15 parallax factor. Scale 1.15 avoids edge-snapping.
-            transform: `translate3d(0, ${scrollY * 0.15}px, 0) scale(1.15)` 
+            // Refined 0.15 parallax factor for smooth depth. Scale 1.2 prevents white edges.
+            transform: `translate3d(0, ${scrollY * 0.15}px, 0) scale(1.2)` 
           }}
           aria-hidden="true"
         />
         
-        {/* Layered readability overlay: Solid darkening + slight blur for architectural depth */}
+        {/* Layered Readability Overlay: High contrast while preserving tech aesthetic */}
         <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-[2px]" />
         
-        {/* Optimized gradients for text contrast centered on the content area */}
+        {/* Radial spotlight focusing the viewer on the primary copy */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,transparent_0%,rgba(15,23,42,0.85)_100%)] hidden lg:block" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(15,23,42,0.85)_100%)] lg:hidden" />
         
-        {/* Grounding gradient for section blending */}
+        {/* Linear gradient at bottom to ground the hero section */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-transparent to-slate-950" />
       </div>
 
@@ -159,7 +159,7 @@ export const Hero: React.FC = () => {
               <span>Future-Proof Software Engineering</span>
             </div>
             
-            {/* Heading with shadow enhancement for readability */}
+            {/* Main Title with Typing Animation and Blinking Cursor */}
             <h1 className={`text-4xl sm:text-6xl md:text-8xl lg:text-7xl xl:text-9xl font-black text-white tracking-tighter leading-[1.0] min-h-[2.1em] md:min-h-[1.1em] drop-shadow-2xl transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               Building the <br className="hidden md:block"/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-blue-200 inline-block">
@@ -170,7 +170,7 @@ export const Hero: React.FC = () => {
               </span>
             </h1>
             
-            {/* Tagline and Buttons with shadow for pop */}
+            {/* Tagline and Refined Buttons */}
             <div className={`space-y-10 md:space-y-12 transition-all duration-1000 delay-300 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
               <p className="text-lg sm:text-xl md:text-3xl text-slate-100 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-semibold drop-shadow-md min-h-[3.5rem] md:min-h-0">
                 {typedTagline}
@@ -179,18 +179,18 @@ export const Hero: React.FC = () => {
                 )}
               </p>
 
-              {/* Buttons */}
+              {/* Enhanced Interactive Buttons */}
               <div className="flex flex-col items-center lg:items-start gap-8">
                 <div className="flex flex-col sm:flex-row items-center gap-5 sm:gap-6 justify-center lg:justify-start w-full">
                   <Link to="/contact" className="w-full sm:w-auto">
                     <Button 
                       size="lg" 
                       variant="primary" 
-                      className="group relative w-full overflow-hidden rounded-2xl border-none bg-blue-600 px-12 font-black text-white shadow-2xl shadow-blue-600/30 transition-all duration-300 hover:scale-[1.02] hover:bg-blue-500 hover:shadow-[0_20px_40px_rgba(37,99,235,0.4)] active:scale-95 md:px-14"
+                      className="group relative w-full overflow-hidden rounded-2xl border-none bg-blue-600 px-12 font-black text-white shadow-2xl shadow-blue-600/30 transition-all duration-500 hover:scale-[1.05] hover:bg-blue-500 hover:shadow-[0_20px_40px_rgba(37,99,235,0.4)] active:scale-95 md:px-14"
                     >
                       <span className="relative z-10 flex items-center justify-center gap-2">
                         Request a Quote
-                        <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                        <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-2" />
                       </span>
                     </Button>
                   </Link>
@@ -198,7 +198,7 @@ export const Hero: React.FC = () => {
                     <Button 
                       variant="secondary" 
                       size="lg" 
-                      className="group w-full gap-2 rounded-2xl border border-white/10 bg-white/5 px-12 font-black text-white shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:bg-white/10 hover:shadow-[0_20px_40px_rgba(255,255,255,0.1)] hover:ring-1 hover:ring-white/30 active:scale-95 md:px-14"
+                      className="group w-full gap-2 rounded-2xl border border-white/10 bg-white/5 px-12 font-black text-white shadow-xl backdrop-blur-md transition-all duration-500 hover:scale-[1.05] hover:bg-white/10 hover:shadow-[0_20px_40px_rgba(255,255,255,0.1)] hover:ring-1 hover:ring-white/30 active:scale-95 md:px-14"
                     >
                       <PlayCircle size={20} className="transition-transform duration-300 group-hover:scale-110 group-hover:fill-white/20" />
                       Request a Demo
@@ -210,7 +210,7 @@ export const Hero: React.FC = () => {
                   <Button 
                     variant="ghost" 
                     size="md" 
-                    className="group w-full gap-2 rounded-2xl border border-white/5 px-10 font-bold text-slate-300 transition-all duration-300 hover:scale-[1.02] hover:border-white/20 hover:bg-white/5 hover:text-white lg:w-auto"
+                    className="group w-full gap-2 rounded-2xl border border-white/5 px-10 font-bold text-slate-300 transition-all duration-500 hover:scale-[1.05] hover:border-white/20 hover:bg-white/5 hover:text-white lg:w-auto"
                   >
                     <MessageCircle size={18} className="transition-transform duration-300 group-hover:-rotate-12 group-hover:text-blue-400" />
                     Contact Us Directly
