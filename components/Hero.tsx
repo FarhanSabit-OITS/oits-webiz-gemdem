@@ -39,13 +39,13 @@ export const Hero: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
   const heroRef = useRef<HTMLElement>(null);
 
-  // High-performance Parallax scroll tracker
+  // Optimized Parallax scroll tracker
   useEffect(() => {
     const handleScroll = () => {
       if (!heroRef.current) return;
       const rect = heroRef.current.getBoundingClientRect();
       
-      // Only process parallax if hero is visible in viewport
+      // Only process parallax if hero is visible in viewport for performance
       if (rect.top < window.innerHeight && rect.bottom > 0) {
         window.requestAnimationFrame(() => {
           setScrollY(window.scrollY);
@@ -125,24 +125,27 @@ export const Hero: React.FC = () => {
       id="home" 
       className="relative pt-32 pb-24 md:pt-48 md:pb-40 lg:pt-60 lg:pb-56 overflow-hidden min-h-[95vh] lg:min-h-screen flex items-center bg-slate-950"
     >
-      {/* Subtle Parallax Background Layer with Optimized Readability Overlay */}
+      {/* Subtle Parallax Background Layer with Enhanced Overlay */}
       <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
         <div 
-          className="absolute inset-0 bg-cover bg-center will-change-transform"
+          className="absolute inset-0 bg-cover bg-center will-change-transform transition-transform duration-75 ease-out"
           style={{ 
             backgroundImage: 'url("https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2070")',
-            // Refined 0.12 parallax factor for smooth, anchored motion depth
-            transform: `translate3d(0, ${scrollY * 0.12}px, 0) scale(1.2)` 
+            // Subtle 0.15 parallax factor. Scale 1.15 avoids edge-snapping.
+            transform: `translate3d(0, ${scrollY * 0.15}px, 0) scale(1.15)` 
           }}
           aria-hidden="true"
         />
         
-        {/* Layered readability overlay: Precise opacity for visual depth without obscuring text */}
-        <div className="absolute inset-0 bg-slate-950/65 backdrop-blur-[2px]" />
+        {/* Layered readability overlay: Solid darkening + slight blur for architectural depth */}
+        <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-[2px]" />
         
-        {/* Radial and Linear Gradients for contrast and grounding */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(15,23,42,0.9)_100%)]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-transparent to-slate-950" />
+        {/* Optimized gradients for text contrast centered on the content area */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,transparent_0%,rgba(15,23,42,0.85)_100%)] hidden lg:block" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(15,23,42,0.85)_100%)] lg:hidden" />
+        
+        {/* Grounding gradient for section blending */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-transparent to-slate-950" />
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
@@ -156,8 +159,8 @@ export const Hero: React.FC = () => {
               <span>Future-Proof Software Engineering</span>
             </div>
             
-            {/* Heading */}
-            <h1 className={`text-4xl sm:text-6xl md:text-8xl lg:text-7xl xl:text-9xl font-black text-white tracking-tighter leading-[1.0] min-h-[2.1em] md:min-h-[1.1em] transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            {/* Heading with shadow enhancement for readability */}
+            <h1 className={`text-4xl sm:text-6xl md:text-8xl lg:text-7xl xl:text-9xl font-black text-white tracking-tighter leading-[1.0] min-h-[2.1em] md:min-h-[1.1em] drop-shadow-2xl transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               Building the <br className="hidden md:block"/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-blue-200 inline-block">
                 {typedTitle}
@@ -167,7 +170,7 @@ export const Hero: React.FC = () => {
               </span>
             </h1>
             
-            {/* Tagline and Buttons */}
+            {/* Tagline and Buttons with shadow for pop */}
             <div className={`space-y-10 md:space-y-12 transition-all duration-1000 delay-300 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
               <p className="text-lg sm:text-xl md:text-3xl text-slate-100 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-semibold drop-shadow-md min-h-[3.5rem] md:min-h-0">
                 {typedTagline}
