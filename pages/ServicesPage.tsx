@@ -9,22 +9,22 @@ import { Lightbulb, Users, Activity, TrendingUp } from 'lucide-react';
 const WHY_CHOOSE_US = [
   {
     title: "Expertise & Innovation",
-    desc: "We stay at the bleeding edge of technology, ensuring your solutions are built with the most advanced, future-proof engineering practices available.",
+    desc: "We operate at the bleeding edge of engineering, ensuring your product is built with the most resilient, modern tech available.",
     icon: Lightbulb
   },
   {
     title: "Client-Centric Approach",
-    desc: "Your success is our priority. We align our technical roadmaps with your specific business goals through deep collaboration and strategic planning.",
+    desc: "Your vision is our mandate. We synchronize our technical roadmap directly with your long-term business objectives.",
     icon: Users
   },
   {
     title: "Agile Delivery",
-    desc: "Experience rapid, transparent development cycles with bi-weekly sprints and real-time communication that keep you in control of every milestone.",
+    desc: "Benefit from rapid, high-transparency dev cycles with bi-weekly sprints that keep you in total control of every feature.",
     icon: Activity
   },
   {
     title: "Scalable Solutions",
-    desc: "We architect systems that grow with you. Our cloud-native approach ensures high-performance and resilient scalability for global-scale demands.",
+    desc: "We architect for global-scale growth. Our cloud-native systems expand seamlessly as your user base explodes.",
     icon: TrendingUp
   }
 ];
@@ -59,23 +59,30 @@ const ServicesPage: React.FC = () => {
       <Services />
       
       {/* Why Choose Us Section */}
-      <section className="py-32 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
-        <div className="container mx-auto px-6">
+      <section className="py-32 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-slate-50 dark:from-slate-950 to-transparent opacity-50" />
+        
+        <div className="container mx-auto px-6 relative z-10">
            <div className="flex flex-col items-center text-center mb-20">
               <h2 className="text-blue-600 dark:text-blue-400 font-bold uppercase tracking-[0.3em] mb-4 text-xs">Differentiation</h2>
               <h3 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white leading-tight tracking-tighter">Why top innovators <br/> choose OITS Dhaka.</h3>
            </div>
 
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
               {WHY_CHOOSE_US.map((item, idx) => (
-                <div key={idx} className="group relative p-10 bg-slate-50 dark:bg-slate-800/50 rounded-[2.5rem] border border-slate-100 dark:border-slate-700/50 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/5 hover:-translate-y-2">
-                  <div className="flex gap-8">
-                    <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-bold text-lg shrink-0 shadow-xl shadow-blue-600/20 group-hover:scale-110 transition-transform duration-500">
+                <div key={idx} className="group relative p-10 bg-slate-50 dark:bg-slate-800/40 rounded-[2.5rem] border border-slate-200 dark:border-slate-700/50 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/5 hover:-translate-y-2 hover:ring-1 hover:ring-blue-500/30 overflow-hidden">
+                  {/* Subtle illustrative index background */}
+                  <div className="absolute -bottom-6 -right-4 text-9xl font-black text-slate-900/5 dark:text-white/5 pointer-events-none select-none transition-transform duration-700 group-hover:-translate-y-4 group-hover:-translate-x-4">
+                    0{idx + 1}
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-8 relative z-10">
+                    <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-bold text-lg shrink-0 shadow-xl shadow-blue-600/20 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                       <item.icon size={30} />
                     </div>
                     <div className="space-y-4">
                       <div className="flex items-center gap-3">
-                        <span className="text-[10px] font-black text-blue-600/40 dark:text-blue-400/40 font-mono">0{idx + 1}</span>
+                        <span className="text-[10px] font-black text-blue-600/60 dark:text-blue-400/60 font-mono tracking-widest uppercase">Feature</span>
                         <h4 className="font-black text-2xl text-slate-900 dark:text-white tracking-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{item.title}</h4>
                       </div>
                       <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
@@ -93,21 +100,26 @@ const ServicesPage: React.FC = () => {
                  <div className="relative aspect-video rounded-[3rem] overflow-hidden shadow-2xl">
                     <img 
                       src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1000" 
-                      alt="Team working together" 
+                      alt="Team working together at OITS Dhaka" 
                       loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                     />
                  </div>
               </div>
               <div className="lg:w-1/2 space-y-6">
-                <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed italic">
+                <div className="inline-block p-1 bg-blue-600/10 rounded-lg">
+                   <div className="px-3 py-1 bg-blue-600 text-[10px] font-black text-white uppercase tracking-widest rounded-md">Philosophy</div>
+                </div>
+                <p className="text-slate-700 dark:text-slate-300 text-lg md:text-xl leading-relaxed italic font-medium">
                   "At OITS Dhaka, we don't just write code; we solve complex business problems through engineering excellence and radical transparency."
                 </p>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-800 shimmer" />
+                  <div className="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                    <img src="https://i.pravatar.cc/150?u=techlead" className="w-full h-full object-cover opacity-80" alt="Tech Lead avatar" />
+                  </div>
                   <div>
                     <p className="font-black text-slate-900 dark:text-white">Engineering Leadership</p>
-                    <p className="text-xs font-bold text-blue-600 uppercase tracking-widest">OITS Dhaka Team</p>
+                    <p className="text-xs font-bold text-blue-600 uppercase tracking-widest">OITS Dhaka Core Team</p>
                   </div>
                 </div>
               </div>

@@ -39,12 +39,18 @@ export const Hero: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
   const heroRef = useRef<HTMLElement>(null);
 
-  // Parallax scroll tracker with RAF for performance
+  // High-performance Parallax scroll tracker
   useEffect(() => {
     const handleScroll = () => {
-      window.requestAnimationFrame(() => {
-        setScrollY(window.scrollY);
-      });
+      if (!heroRef.current) return;
+      const rect = heroRef.current.getBoundingClientRect();
+      
+      // Only process parallax if hero is visible in viewport
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        window.requestAnimationFrame(() => {
+          setScrollY(window.scrollY);
+        });
+      }
     };
     
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -119,24 +125,24 @@ export const Hero: React.FC = () => {
       id="home" 
       className="relative pt-32 pb-24 md:pt-48 md:pb-40 lg:pt-60 lg:pb-56 overflow-hidden min-h-[95vh] lg:min-h-screen flex items-center bg-slate-950"
     >
-      {/* Subtle Parallax Background Layer */}
+      {/* Subtle Parallax Background Layer with Optimized Readability Overlay */}
       <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
         <div 
-          className="absolute inset-0 bg-cover bg-center will-change-transform transition-transform duration-75 ease-out"
+          className="absolute inset-0 bg-cover bg-center will-change-transform"
           style={{ 
             backgroundImage: 'url("https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2070")',
-            // Refined 0.15 parallax factor for subtle motion depth
-            transform: `translate3d(0, ${scrollY * 0.15}px, 0) scale(1.15)` 
+            // Refined 0.12 parallax factor for smooth, anchored motion depth
+            transform: `translate3d(0, ${scrollY * 0.12}px, 0) scale(1.2)` 
           }}
           aria-hidden="true"
         />
         
-        {/* Layered readability overlay: Enhanced opacity and subtle blur */}
-        <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-[2px]" />
+        {/* Layered readability overlay: Precise opacity for visual depth without obscuring text */}
+        <div className="absolute inset-0 bg-slate-950/65 backdrop-blur-[2px]" />
         
-        {/* Gradients for effective text contrast and visual grounding */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(15,23,42,0.95)_100%)]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/50 via-transparent to-slate-950" />
+        {/* Radial and Linear Gradients for contrast and grounding */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(15,23,42,0.9)_100%)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-transparent to-slate-950" />
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
