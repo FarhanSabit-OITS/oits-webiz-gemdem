@@ -100,15 +100,15 @@ export const Hero: React.FC = () => {
     if (typedCode.length < CODE_SNIPPET.length) {
       const nextChar = CODE_SNIPPET[typedCode.length];
       
-      // Dynamic typing speed for realism
-      let delay = 30; // Base speed
-      if (nextChar === '\n') delay = 400; // Pause at line breaks
-      else if (nextChar === ';') delay = 150; // Pause at statements
-      else if (nextChar === '{' || nextChar === '}') delay = 200; // Pause at blocks
-      else if (nextChar === ' ') delay = 10; // Fast spaces
+      // Dynamic typing speed for realism - Adjusted to be moderate
+      let delay = 50; // Base speed (slower than before)
+      if (nextChar === '\n') delay = 500; // Pause at line breaks
+      else if (nextChar === ';') delay = 200; // Pause at statements
+      else if (nextChar === '{' || nextChar === '}') delay = 300; // Pause at blocks
+      else if (nextChar === ' ') delay = 20; // Fast spaces
       
-      // Randomize slightly
-      delay += Math.random() * 20;
+      // Randomize slightly for natural feel
+      delay += Math.random() * 30;
 
       const timeout = setTimeout(() => {
         setTypedCode(CODE_SNIPPET.slice(0, typedCode.length + 1));
@@ -135,11 +135,11 @@ export const Hero: React.FC = () => {
           aria-hidden="true"
         />
         
-        {/* Layered dark overlay for extreme text readability */}
-        <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-[1px]" />
+        {/* Layered dark overlay for extreme text readability - Adjusted to 80% opacity */}
+        <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[2px]" />
         
         {/* Radial gradient for focus on content */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(15,23,42,0.8)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(15,23,42,0.9)_100%)]" />
         
         {/* Vertical gradient for transition from header to footer sections */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-transparent to-slate-950" />
@@ -178,11 +178,11 @@ export const Hero: React.FC = () => {
                     <Button 
                       size="lg" 
                       variant="primary" 
-                      className="group relative transition-all duration-500 hover:scale-[1.03] hover:bg-blue-500 hover:shadow-[0_20px_50px_rgba(37,99,235,0.4)] px-12 md:px-14 shadow-2xl shadow-blue-600/30 active:scale-95 w-full bg-blue-600 text-white border-none rounded-2xl overflow-hidden font-black"
+                      className="group relative w-full overflow-hidden rounded-2xl border-none bg-blue-600 px-12 font-black text-white shadow-2xl shadow-blue-600/30 transition-all duration-300 hover:scale-[1.02] hover:bg-blue-500 hover:shadow-[0_20px_40px_rgba(37,99,235,0.4)] active:scale-95 md:px-14"
                     >
                       <span className="relative z-10 flex items-center justify-center gap-2">
                         Request a Quote
-                        <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1.5" />
+                        <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                       </span>
                     </Button>
                   </Link>
@@ -190,9 +190,9 @@ export const Hero: React.FC = () => {
                     <Button 
                       variant="secondary" 
                       size="lg" 
-                      className="group transition-all duration-500 hover:scale-[1.03] bg-white/10 backdrop-blur-md text-white border border-white/20 active:scale-95 w-full rounded-2xl flex items-center justify-center gap-2 px-12 md:px-14 hover:bg-white/20 hover:text-blue-200 hover:shadow-[0_20px_50px_rgba(255,255,255,0.15)] ring-1 ring-white/10 hover:ring-white/40 shadow-xl font-black"
+                      className="group w-full gap-2 rounded-2xl border border-white/10 bg-white/5 px-12 font-black text-white shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:bg-white/10 hover:shadow-[0_20px_40px_rgba(255,255,255,0.1)] hover:ring-1 hover:ring-white/30 active:scale-95 md:px-14"
                     >
-                      <PlayCircle size={20} className="transition-transform group-hover:scale-110" />
+                      <PlayCircle size={20} className="transition-transform duration-300 group-hover:scale-110 group-hover:fill-white/20" />
                       Request a Demo
                     </Button>
                   </Link>
@@ -202,9 +202,9 @@ export const Hero: React.FC = () => {
                   <Button 
                     variant="ghost" 
                     size="md" 
-                    className="group transition-all duration-500 hover:scale-[1.02] hover:bg-white/10 hover:text-white text-slate-400 rounded-2xl flex items-center justify-center gap-2 border border-white/10 hover:border-white/25 px-10 w-full lg:w-auto font-bold"
+                    className="group w-full gap-2 rounded-2xl border border-white/5 px-10 font-bold text-slate-400 transition-all duration-300 hover:scale-[1.02] hover:border-white/20 hover:bg-white/5 hover:text-white lg:w-auto"
                   >
-                    <MessageCircle size={18} className="transition-transform group-hover:rotate-12" />
+                    <MessageCircle size={18} className="transition-transform duration-300 group-hover:-rotate-12 group-hover:text-blue-400" />
                     Contact Us Directly
                   </Button>
                 </Link>
