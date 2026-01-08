@@ -42,9 +42,12 @@ export const Hero: React.FC = () => {
   // Optimized Scroll Tracker for Parallax
   useEffect(() => {
     const handleScroll = () => {
-      window.requestAnimationFrame(() => {
-        setScrollY(window.scrollY);
-      });
+      // Only update parallax if we are near the top to save resources
+      if (window.scrollY <= window.innerHeight * 1.5) {
+        window.requestAnimationFrame(() => {
+          setScrollY(window.scrollY);
+        });
+      }
     };
     
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -123,14 +126,14 @@ export const Hero: React.FC = () => {
       id="home" 
       className="relative pt-32 pb-24 md:pt-48 md:pb-40 lg:pt-60 lg:pb-56 overflow-hidden min-h-[95vh] lg:min-h-screen flex items-center bg-slate-950"
     >
-      {/* Subtle Parallax Background Layer */}
+      {/* Parallax Background Layer */}
       <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-40 will-change-transform"
           style={{ 
             backgroundImage: 'url("https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2070")',
-            // Parallax factor of 0.15 provides subtle depth without being distracting
-            transform: `translate3d(0, ${scrollY * 0.15}px, 0) scale(1.1)` 
+            // Parallax factor of 0.2 provides nice depth. Scale 1.15 prevents edge artifacts during scroll.
+            transform: `translate3d(0, ${scrollY * 0.2}px, 0) scale(1.15)` 
           }}
           aria-hidden="true"
         />
