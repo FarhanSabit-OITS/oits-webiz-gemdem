@@ -36,7 +36,8 @@ export const TrustedBy: React.FC = () => {
               <div className="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-xs font-black text-slate-400 transition-all duration-300 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-115 group-hover:rotate-3 shadow-sm group-hover:shadow-lg group-hover:shadow-blue-500/20">
                 {logo.icon}
               </div>
-              <span className="text-sm font-black text-slate-400 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white transition-colors duration-300 tracking-tight">
+              {/* Darker slate-500 for better visibility in light mode */}
+              <span className="text-sm font-black text-slate-500 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white transition-colors duration-300 tracking-tight">
                 {logo.name}
               </span>
             </div>

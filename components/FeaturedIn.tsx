@@ -92,7 +92,8 @@ export const FeaturedIn: React.FC = () => {
                 className={`group flex items-center justify-center transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-90'}`}
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
-                <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-200 dark:text-slate-800 tracking-tighter transition-all duration-500 group-hover:text-blue-600/80 dark:group-hover:text-blue-400/80 group-hover:scale-105 group-hover:-rotate-1 cursor-default select-none relative">
+                {/* Fixed color contrast: Slate-400 for light mode, Slate-600 for dark mode */}
+                <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-400 dark:text-slate-600 tracking-tighter transition-all duration-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:scale-105 group-hover:-rotate-1 cursor-default select-none relative">
                   {pub.name}
                   {/* Subtle underline hover effect */}
                   <span className="absolute -bottom-2 left-0 w-0 h-1 bg-blue-600 dark:bg-blue-400 transition-all duration-500 group-hover:w-full opacity-40 rounded-full" />
