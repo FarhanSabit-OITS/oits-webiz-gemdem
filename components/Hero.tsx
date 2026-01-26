@@ -123,7 +123,7 @@ export const Hero: React.FC = () => {
     <section 
       ref={heroRef} 
       id="home" 
-      className="relative pt-32 pb-24 md:pt-48 md:pb-40 lg:pt-60 lg:pb-56 overflow-hidden min-h-[95vh] lg:min-h-screen flex items-center bg-slate-950"
+      className="relative pt-28 pb-20 md:pt-40 md:pb-32 lg:pt-52 lg:pb-48 overflow-hidden min-h-[100dvh] flex items-center bg-slate-950"
     >
       {/* Subtle Parallax Background Layer with Deep Overlay */}
       <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
@@ -138,29 +138,29 @@ export const Hero: React.FC = () => {
         />
         
         {/* Layered Readability Overlay: High contrast while preserving tech aesthetic */}
-        <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[2px]" />
         
         {/* Radial spotlight focusing the viewer on the primary copy */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,transparent_0%,rgba(15,23,42,0.85)_100%)] hidden lg:block" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(15,23,42,0.85)_100%)] lg:hidden" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,transparent_0%,rgba(15,23,42,0.9)_100%)] hidden lg:block" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(15,23,42,0.9)_100%)] lg:hidden" />
         
         {/* Linear gradient at bottom to ground the hero section */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-transparent to-slate-950" />
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24 xl:gap-32">
+        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20 xl:gap-24">
           
           {/* Text Content */}
-          <div className="flex-1 space-y-10 md:space-y-14 text-center lg:text-left w-full">
+          <div className="flex-1 space-y-8 md:space-y-12 text-center lg:text-left w-full">
             {/* Tag */}
-            <div className={`inline-flex items-center gap-2 px-5 py-2 rounded-full bg-blue-500/10 border border-blue-400/20 text-[10px] md:text-xs font-black text-blue-300 uppercase tracking-[0.3em] transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-400/20 text-[10px] md:text-xs font-black text-blue-300 uppercase tracking-[0.3em] transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               <Zap size={14} className="fill-current animate-pulse text-blue-400" />
               <span>Future-Proof Software Engineering</span>
             </div>
             
             {/* Main Title with Typing Animation and Blinking Cursor */}
-            <h1 className={`text-4xl sm:text-6xl md:text-8xl lg:text-7xl xl:text-9xl font-black text-white tracking-tighter leading-[1.0] min-h-[2.1em] md:min-h-[1.1em] drop-shadow-2xl transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <h1 className={`text-5xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl font-black text-white tracking-tighter leading-[1.0] min-h-[2.1em] md:min-h-[1.1em] drop-shadow-2xl transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               Building the <br className="hidden md:block"/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-blue-200 inline-block">
                 {typedTitle}
@@ -172,25 +172,25 @@ export const Hero: React.FC = () => {
             
             {/* Tagline and Refined Buttons */}
             <div className={`space-y-10 md:space-y-12 transition-all duration-1000 delay-300 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              <p className="text-lg sm:text-xl md:text-3xl text-slate-100 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-semibold drop-shadow-md min-h-[3.5rem] md:min-h-0">
+              <p className="text-lg sm:text-xl md:text-2xl text-slate-100 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-semibold drop-shadow-md min-h-[3.5rem] md:min-h-0">
                 {typedTagline}
                 {isTitleDone && !isTaglineDone && (
                   <span className="inline-block w-[2px] h-[0.8em] bg-blue-400 ml-1 animate-pulse align-middle" />
                 )}
               </p>
 
-              {/* Enhanced Interactive Buttons */}
+              {/* Enhanced Interactive Buttons with High Contrast */}
               <div className="flex flex-col items-center lg:items-start gap-8">
-                <div className="flex flex-col sm:flex-row items-center gap-5 sm:gap-6 justify-center lg:justify-start w-full">
+                <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 justify-center lg:justify-start w-full">
                   <Link to="/contact" className="w-full sm:w-auto">
                     <Button 
                       size="lg" 
                       variant="primary" 
-                      className="group relative w-full overflow-hidden rounded-2xl border-none bg-blue-600 px-12 font-black text-white shadow-2xl shadow-blue-600/30 transition-all duration-500 hover:scale-[1.05] hover:bg-blue-500 hover:shadow-[0_20px_40px_rgba(37,99,235,0.4)] active:scale-95 md:px-14"
+                      className="group relative w-full sm:w-auto overflow-hidden rounded-2xl border-none bg-blue-600 px-10 py-4 font-black text-white shadow-2xl shadow-blue-600/40 transition-all duration-500 hover:scale-[1.03] hover:bg-blue-500 hover:shadow-[0_20px_40px_rgba(37,99,235,0.5)] active:scale-95 text-sm md:text-base tracking-widest uppercase"
                     >
-                      <span className="relative z-10 flex items-center justify-center gap-2">
+                      <span className="relative z-10 flex items-center justify-center gap-3">
                         Request a Quote
-                        <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-2" />
+                        <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1.5" />
                       </span>
                     </Button>
                   </Link>
@@ -198,7 +198,7 @@ export const Hero: React.FC = () => {
                     <Button 
                       variant="secondary" 
                       size="lg" 
-                      className="group w-full gap-2 rounded-2xl border border-white/10 bg-white/5 px-12 font-black text-white shadow-xl backdrop-blur-md transition-all duration-500 hover:scale-[1.05] hover:bg-white/10 hover:shadow-[0_20px_40px_rgba(255,255,255,0.1)] hover:ring-1 hover:ring-white/30 active:scale-95 md:px-14"
+                      className="group w-full sm:w-auto gap-2 rounded-2xl border border-white/20 bg-slate-900/40 px-10 py-4 font-black text-white shadow-xl backdrop-blur-md transition-all duration-500 hover:scale-[1.03] hover:bg-white/10 hover:border-white/40 hover:shadow-[0_20px_40px_rgba(255,255,255,0.1)] active:scale-95 text-sm md:text-base tracking-widest uppercase"
                     >
                       <PlayCircle size={20} className="transition-transform duration-300 group-hover:scale-110 group-hover:fill-white/20" />
                       Request a Demo
@@ -210,7 +210,7 @@ export const Hero: React.FC = () => {
                   <Button 
                     variant="ghost" 
                     size="md" 
-                    className="group w-full gap-2 rounded-2xl border border-white/5 px-10 font-bold text-slate-300 transition-all duration-500 hover:scale-[1.05] hover:border-white/20 hover:bg-white/5 hover:text-white lg:w-auto"
+                    className="group w-full gap-2 rounded-2xl border border-transparent px-8 font-bold text-slate-200 transition-all duration-500 hover:scale-[1.03] hover:border-white/10 hover:bg-white/5 hover:text-white lg:w-auto"
                   >
                     <MessageCircle size={18} className="transition-transform duration-300 group-hover:-rotate-12 group-hover:text-blue-400" />
                     Contact Us Directly
@@ -244,11 +244,11 @@ export const Hero: React.FC = () => {
           </div>
 
           {/* Visual/Code Snippet Container */}
-          <div className={`flex-1 w-full max-w-2xl transition-all duration-1000 delay-300 transform ${isVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-12 scale-95'}`}>
+          <div className={`flex-1 w-full max-w-xl lg:max-w-2xl transition-all duration-1000 delay-300 transform ${isVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-12 scale-95'} mt-12 lg:mt-0`}>
             <div className="relative group/visual">
               
               {/* Floating Code Window */}
-              <div className="absolute -top-12 -left-8 w-full max-w-[320px] sm:max-w-sm z-20 hidden lg:block animate-float">
+              <div className="absolute -top-12 -left-8 w-full max-w-[280px] sm:max-w-sm z-20 hidden lg:block animate-float">
                 <div className="bg-slate-950/95 backdrop-blur-2xl rounded-[2.5rem] border border-white/10 shadow-2xl overflow-hidden ring-1 ring-white/10">
                   <div className="flex items-center justify-between px-6 py-4 bg-slate-900/50 border-b border-white/5">
                     <div className="flex gap-2.5">
