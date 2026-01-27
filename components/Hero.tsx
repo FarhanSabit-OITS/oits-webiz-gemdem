@@ -42,11 +42,8 @@ export const Hero: React.FC = () => {
   // High-performance Parallax scroll tracker
   useEffect(() => {
     const handleScroll = () => {
-      if (!heroRef.current) return;
-      const rect = heroRef.current.getBoundingClientRect();
-      
-      // Only process parallax if hero is visible in viewport
-      if (rect.top < window.innerHeight && rect.bottom > 0) {
+      // Optimization: Only animate when within view range (approx 1.2x viewport height)
+      if (window.scrollY <= window.innerHeight * 1.2) {
         window.requestAnimationFrame(() => {
           setScrollY(window.scrollY);
         });
@@ -126,7 +123,7 @@ export const Hero: React.FC = () => {
       className="relative pt-32 pb-20 md:pt-40 md:pb-32 lg:pt-52 lg:pb-48 overflow-hidden min-h-[100dvh] flex items-center bg-slate-950"
     >
       {/* Refined Parallax Background Layer */}
-      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none select-none">
         <div 
           className="absolute inset-0 bg-cover bg-center will-change-transform"
           style={{ 
@@ -137,7 +134,7 @@ export const Hero: React.FC = () => {
           aria-hidden="true"
         />
         
-        {/* Base dark overlay - increased opacity for better readability */}
+        {/* Base dark overlay - increased opacity (70%) for better text readability */}
         <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-[1px]" />
         
         {/* Desktop Gradient: Darker on left for text readability */}
@@ -233,7 +230,7 @@ export const Hero: React.FC = () => {
                       style={{ transitionDelay: `${700 + idx * 100}ms` }}
                     >
                       {/* Logo Container with Scale and Brightness Animation */}
-                      <div className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-lg sm:rounded-xl md:rounded-2xl ${partner.color} flex items-center justify-center text-[10px] sm:text-[11px] md:text-xs font-black transition-all duration-300 transform group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-blue-500/20 shadow-sm ring-1 ring-white/5 group-hover:ring-white/20`}>
+                      <div className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-lg sm:rounded-xl md:rounded-2xl ${partner.color} flex items-center justify-center text-[10px] sm:text-[11px] md:text-xs font-black transition-all duration-500 transform group-hover:scale-110 group-hover:-rotate-3 group-hover:shadow-lg group-hover:shadow-blue-500/20 shadow-sm ring-1 ring-white/5 group-hover:ring-white/20 active:scale-95`}>
                         {partner.icon}
                       </div>
                       {/* Text label with color shift */}
