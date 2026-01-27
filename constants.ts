@@ -13,6 +13,14 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Contact', href: `/contact` },
 ];
 
+export const TRUSTED_PARTNERS = [
+  { name: 'TECHFLOW', icon: 'TF' },
+  { name: 'CLOUDSCALE', icon: 'CS' },
+  { name: 'INNOVATE', icon: 'IN' },
+  { name: 'NEXUS', icon: 'NX' },
+  { name: 'VANTAGE', icon: 'VT' },
+];
+
 export const PROCESS_STEPS: ProcessStep[] = [
   {
     id: 'discovery',

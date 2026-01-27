@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Search, Layers, Code, ShieldCheck, Rocket, ChevronRight } from 'lucide-react';
 import { PROCESS_STEPS } from '../constants';
@@ -52,19 +51,19 @@ export const Process: React.FC = () => {
           {PROCESS_STEPS.map((step, index) => (
             <div 
               key={step.id} 
-              className={`relative z-10 flex flex-col items-center text-center transition-all duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+              className={`group relative z-10 flex flex-col items-center text-center p-6 rounded-3xl transition-all duration-300 hover:bg-white dark:hover:bg-slate-800 hover:shadow-xl dark:hover:shadow-blue-900/10 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
               <div className="mb-6 relative">
-                 <div className="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-xl shadow-blue-500/5 group-hover:scale-110 transition-transform">
+                 <div className="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-xl shadow-blue-500/5 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                     {iconMap[step.icon]}
                  </div>
-                 <div className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-slate-900 dark:bg-blue-600 text-white text-xs font-bold flex items-center justify-center border-2 border-white dark:border-slate-900">
+                 <div className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-slate-900 dark:bg-blue-600 text-white text-xs font-bold flex items-center justify-center border-2 border-white dark:border-slate-900 transition-all duration-300 group-hover:scale-125 group-hover:bg-blue-600 group-hover:text-white">
                     {step.number}
                  </div>
               </div>
               
-              <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{step.title}</h4>
+              <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{step.title}</h4>
               <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed max-w-[200px]">
                 {step.description}
               </p>

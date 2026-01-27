@@ -1,12 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-
-const LOGOS = [
-  { name: 'TECHFLOW', icon: 'TF' },
-  { name: 'CLOUDSCALE', icon: 'CS' },
-  { name: 'INNOVATE', icon: 'IN' },
-  { name: 'NEXUS', icon: 'NX' },
-  { name: 'VANTAGE', icon: 'VT' },
-];
+import { TRUSTED_PARTNERS } from '../constants';
 
 export const TrustedBy: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -21,13 +14,13 @@ export const TrustedBy: React.FC = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 bg-white dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-800 transition-colors duration-300">
+    <section ref={sectionRef} className="py-16 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 transition-colors duration-300">
       <div className="container mx-auto px-6">
         <p className={`text-center text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           Trusted By Emerging Global Leaders
         </p>
         <div className="flex flex-wrap justify-center items-center gap-10 md:gap-20">
-          {LOGOS.map((logo, index) => (
+          {TRUSTED_PARTNERS.map((logo, index) => (
             <div 
               key={logo.name} 
               className={`flex items-center gap-3 group cursor-default transition-all duration-700 transform ${isVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-8'}`}

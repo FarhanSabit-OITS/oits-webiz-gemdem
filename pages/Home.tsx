@@ -29,6 +29,9 @@ const Home: React.FC = () => {
       </div>
 
       <FeaturedIn />
+      {/* Trusted By Section positioned below Featured In */}
+      <TrustedBy />
+      
       <Process />
 
       {/* Featured Works Section */}
@@ -48,9 +51,6 @@ const Home: React.FC = () => {
       </div>
 
       <Testimonials />
-      
-      {/* Trust factors right before conversion */}
-      <TrustedBy />
       
       <section className="py-32 bg-blue-600 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 opacity-50" />
