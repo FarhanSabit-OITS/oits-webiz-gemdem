@@ -123,7 +123,7 @@ export const Hero: React.FC = () => {
     <section 
       ref={heroRef} 
       id="home" 
-      className="relative pt-28 pb-16 md:pt-36 md:pb-24 lg:pt-48 lg:pb-40 overflow-hidden min-h-[100dvh] flex items-center bg-slate-950"
+      className="relative pt-32 pb-20 md:pt-40 md:pb-32 lg:pt-52 lg:pb-48 overflow-hidden min-h-[100dvh] flex items-center bg-slate-950"
     >
       {/* Refined Parallax Background Layer */}
       <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
@@ -131,20 +131,22 @@ export const Hero: React.FC = () => {
           className="absolute inset-0 bg-cover bg-center will-change-transform"
           style={{ 
             backgroundImage: 'url("https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2070")',
-            // Subtle parallax factor (0.2) with scale (1.1) to avoid edges showing
-            transform: `translate3d(0, ${scrollY * 0.2}px, 0) scale(1.1)` 
+            // Subtle parallax factor (0.15) with scale (1.1) to avoid edges showing
+            transform: `translate3d(0, ${scrollY * 0.15}px, 0) scale(1.1)` 
           }}
           aria-hidden="true"
         />
         
-        {/* Base dark overlay - reduced opacity to let image show through slightly more */}
-        <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-[1px]" />
+        {/* Base dark overlay - increased opacity for better readability */}
+        <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-[1px]" />
         
-        {/* Gradient Overlay for Text Readability - Darker on left/top */}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/80 to-slate-950/50" />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/30 via-transparent to-slate-950" />
+        {/* Desktop Gradient: Darker on left for text readability */}
+        <div className="hidden lg:block absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent" />
         
-        {/* Radial spotlight effect */}
+        {/* Mobile Gradient: Darker top/bottom for readability of centered text */}
+        <div className="lg:hidden absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950/70 to-slate-950" />
+        
+        {/* Radial spotlight effect for depth */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,transparent_0%,rgba(15,23,42,0.6)_100%)] hidden lg:block" />
       </div>
 
@@ -218,7 +220,7 @@ export const Hero: React.FC = () => {
                 </Link>
               </div>
 
-              {/* Trusted By - Responsive Layout */}
+              {/* Trusted By - Responsive Layout with Enhanced Animations */}
               <div className={`pt-10 md:pt-14 transition-all duration-1000 delay-500 border-t border-white/10 max-w-2xl mx-auto lg:mx-0 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
                 <p className="text-center lg:text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-8">
                   Trusted by Global Innovators
@@ -230,10 +232,12 @@ export const Hero: React.FC = () => {
                       className={`flex items-center gap-2.5 group cursor-default transition-all duration-700 transform ${isVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-8'}`}
                       style={{ transitionDelay: `${700 + idx * 100}ms` }}
                     >
-                      <div className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-lg sm:rounded-xl md:rounded-2xl ${partner.color} flex items-center justify-center text-[10px] sm:text-[11px] md:text-xs font-black transition-all duration-500 group-hover:scale-115 group-hover:brightness-125 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] shadow-sm`}>
+                      {/* Logo Container with Scale and Brightness Animation */}
+                      <div className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-lg sm:rounded-xl md:rounded-2xl ${partner.color} flex items-center justify-center text-[10px] sm:text-[11px] md:text-xs font-black transition-all duration-300 transform group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-blue-500/20 shadow-sm ring-1 ring-white/5 group-hover:ring-white/20`}>
                         {partner.icon}
                       </div>
-                      <span className="text-xs sm:text-sm font-black text-slate-500 group-hover:text-blue-400 dark:group-hover:text-white transition-colors duration-300 tracking-tight hidden sm:inline-block">
+                      {/* Text label with color shift */}
+                      <span className="text-xs sm:text-sm font-black text-slate-500 group-hover:text-white transition-colors duration-300 tracking-tight hidden sm:inline-block">
                         {partner.name}
                       </span>
                     </div>
