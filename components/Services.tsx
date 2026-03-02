@@ -70,7 +70,7 @@ export const Services: React.FC<ServicesProps> = ({ limit }) => {
               onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setSelectedService(service)}
             >
               {/* Icon with hover bounce animation for interactive feedback */}
-              <div className="w-16 h-16 shrink-0 bg-white dark:bg-slate-700 rounded-2xl flex items-center justify-center text-slate-900 dark:text-white shadow-sm mb-10 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 group-hover:animate-subtle-bounce border border-slate-100 dark:border-slate-600">
+              <div className="w-16 h-16 shrink-0 bg-white dark:bg-slate-700 rounded-2xl flex items-center justify-center text-slate-900 dark:text-white shadow-sm mb-10 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 group-hover:animate-bounce border border-slate-100 dark:border-slate-600">
                 {iconMap[service.icon]}
               </div>
 

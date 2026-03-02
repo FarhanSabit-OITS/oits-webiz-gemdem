@@ -188,7 +188,7 @@ const ProjectCard = ({ project, onClick, onViewDemo, highlightedTags, index }: a
             Case Study
           </button>
           {project.demoVideoUrl && (
-            <button className="bg-blue-600 text-white px-8 py-3 rounded-full font-bold text-xs shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-75 hover:bg-blue-700 hover:scale-105 flex items-center gap-2 active:scale-95" onClick={(e) => { e.stopPropagation(); onViewDemo(); }}>
+            <button className="bg-blue-600 text-white px-8 py-3 rounded-full font-bold text-xs shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-75 hover:bg-blue-700 hover:scale-110 flex items-center gap-2 active:scale-95" onClick={(e) => { e.stopPropagation(); onViewDemo(); }}>
               <MonitorPlay size={18} /> Demo
             </button>
           )}

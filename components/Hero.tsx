@@ -103,9 +103,10 @@ export const Hero: React.FC = () => {
       const nextChar = CODE_SNIPPET[typedCode.length];
       let delay = 40; 
       
-      if (nextChar === '\n') delay = 500;
-      else if ([';', '{', '}'].includes(nextChar)) delay = 200;
-      else if (nextChar === ' ') delay = 15;
+      if (nextChar === '\n') delay = 400;
+      else if ([';', '{', '}'].includes(nextChar)) delay = 150;
+      else if (nextChar === ',') delay = 100;
+      else if (nextChar === ' ') delay = 20;
       
       delay += Math.random() * 20 - 10;
 
@@ -185,7 +186,7 @@ export const Hero: React.FC = () => {
                     <Button 
                       size="lg" 
                       variant="primary" 
-                      className="group relative w-full sm:w-auto overflow-hidden rounded-xl sm:rounded-2xl border-none bg-blue-600 px-8 py-3.5 md:px-10 md:py-4 font-black text-white shadow-2xl shadow-blue-600/40 transition-all duration-500 hover:scale-[1.05] hover:bg-blue-500 hover:shadow-[0_25px_50px_rgba(37,99,235,0.5)] active:scale-95 text-xs sm:text-sm md:text-base tracking-widest uppercase ring-offset-2 ring-offset-slate-900 focus:ring-2 focus:ring-blue-400"
+                      className="group relative w-full sm:w-auto overflow-hidden rounded-xl sm:rounded-2xl border-none bg-blue-600 px-8 py-3.5 md:px-10 md:py-4 font-black text-white shadow-2xl shadow-blue-600/40 transition-all duration-300 hover:scale-110 hover:bg-blue-500 hover:shadow-[0_25px_50px_rgba(37,99,235,0.6)] active:scale-95 text-xs sm:text-sm md:text-base tracking-widest uppercase ring-offset-2 ring-offset-slate-900 focus:ring-2 focus:ring-blue-400"
                     >
                       <span className="relative z-10 flex items-center justify-center gap-3">
                         Get Started Today
@@ -197,7 +198,7 @@ export const Hero: React.FC = () => {
                     <Button 
                       variant="secondary" 
                       size="lg" 
-                      className="group w-full sm:w-auto gap-2 rounded-xl sm:rounded-2xl border border-white/20 bg-slate-900/40 px-8 py-3.5 md:px-10 md:py-4 font-black text-white shadow-xl backdrop-blur-md transition-all duration-500 hover:scale-[1.05] hover:bg-white/10 hover:border-white/40 hover:shadow-[0_20px_40px_rgba(255,255,255,0.1)] active:scale-95 text-xs sm:text-sm md:text-base tracking-widest uppercase"
+                      className="group w-full sm:w-auto gap-2 rounded-xl sm:rounded-2xl border border-white/20 bg-slate-900/40 px-8 py-3.5 md:px-10 md:py-4 font-black text-white shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/10 hover:border-white/40 hover:shadow-[0_20px_40px_rgba(255,255,255,0.15)] active:scale-95 text-xs sm:text-sm md:text-base tracking-widest uppercase"
                     >
                       <PlayCircle size={18} className="transition-transform duration-300 group-hover:scale-110 group-hover:fill-white/20 md:w-5 md:h-5" />
                       Request a Demo
@@ -209,7 +210,7 @@ export const Hero: React.FC = () => {
                   <Button 
                     variant="ghost" 
                     size="md" 
-                    className="group w-full gap-2 rounded-xl border border-transparent px-6 font-bold text-slate-300 transition-all duration-500 hover:scale-[1.05] hover:border-white/10 hover:bg-white/5 hover:text-white lg:w-auto text-xs md:text-sm"
+                    className="group w-full gap-2 rounded-xl border border-transparent px-6 font-bold text-slate-300 transition-all duration-300 hover:scale-105 hover:border-white/10 hover:bg-white/5 hover:text-white lg:w-auto text-xs md:text-sm"
                   >
                     <MessageCircle size={16} className="transition-transform duration-300 group-hover:-rotate-12 group-hover:text-blue-400 md:w-[18px] md:h-[18px]" />
                     Contact Us Directly

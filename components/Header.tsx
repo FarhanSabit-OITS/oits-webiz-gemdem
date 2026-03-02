@@ -94,7 +94,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
             <Link 
               key={item.label} 
               to={item.href}
-              aria-label={item.aria}
+              aria-label={item.aria || `Navigate to ${item.label}`}
               onClick={handleLinkClick}
               className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 hover:scale-105 active:scale-95 ${navLinkClass(item.href)}`}
             >
@@ -107,10 +107,11 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
               onClick={toggleTheme}
               className={`p-2.5 rounded-full transition-all active:rotate-12 hover:scale-110 ${themeButtonClass}`}
               aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
              >
                 {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
              </button>
-             <Link to="/contact">
+             <Link to="/contact" aria-label="Start a project with OITS Dhaka">
               <Button 
                 variant="primary" 
                 size="sm" 
@@ -127,6 +128,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
           <button
             onClick={toggleTheme}
             className={`p-2 rounded-full transition-colors ${themeButtonClass}`}
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
           >
             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
           </button>
@@ -135,6 +137,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
             className={`p-2 rounded-lg transition-colors ${isScrolled ? 'text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800' : 'text-white hover:bg-white/20'}`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-expanded={isMobileMenuOpen}
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
           >
             {isMobileMenuOpen ? <X /> : <Menu />}
           </button>
