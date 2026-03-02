@@ -65,6 +65,7 @@ export const Services: React.FC<ServicesProps> = ({ limit }) => {
               role="button"
               tabIndex={0}
               aria-label={`Service: ${service.title}. Click for details.`}
+              aria-describedby={`service-desc-${service.id}`}
               aria-expanded={selectedService?.id === service.id}
               onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setSelectedService(service)}
             >
@@ -74,7 +75,7 @@ export const Services: React.FC<ServicesProps> = ({ limit }) => {
               </div>
 
               <h4 className="text-2xl font-black text-slate-900 dark:text-white mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors tracking-tight">{service.title}</h4>
-              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-8 line-clamp-4 font-medium">
+              <p id={`service-desc-${service.id}`} className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-8 line-clamp-4 font-medium">
                 {service.description}
               </p>
 

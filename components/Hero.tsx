@@ -120,7 +120,7 @@ export const Hero: React.FC = () => {
     <section 
       ref={heroRef} 
       id="home" 
-      className="relative pt-32 pb-20 md:pt-40 md:pb-32 lg:pt-52 lg:pb-48 overflow-hidden min-h-[100dvh] flex items-center bg-slate-950"
+      className="relative pt-32 pb-20 md:pt-40 md:pb-32 lg:pt-52 lg:pb-48 overflow-hidden min-h-[100dvh] flex items-center bg-slate-950 dark"
     >
       {/* Refined Parallax Background Layer */}
       <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none select-none">
@@ -188,7 +188,7 @@ export const Hero: React.FC = () => {
                       className="group relative w-full sm:w-auto overflow-hidden rounded-xl sm:rounded-2xl border-none bg-blue-600 px-8 py-3.5 md:px-10 md:py-4 font-black text-white shadow-2xl shadow-blue-600/40 transition-all duration-500 hover:scale-[1.05] hover:bg-blue-500 hover:shadow-[0_25px_50px_rgba(37,99,235,0.5)] active:scale-95 text-xs sm:text-sm md:text-base tracking-widest uppercase ring-offset-2 ring-offset-slate-900 focus:ring-2 focus:ring-blue-400"
                     >
                       <span className="relative z-10 flex items-center justify-center gap-3">
-                        Request a Quote
+                        Get Started Today
                         <ArrowRight className="h-4 w-4 md:h-5 md:w-5 transition-transform duration-300 group-hover:translate-x-1.5" />
                       </span>
                     </Button>
